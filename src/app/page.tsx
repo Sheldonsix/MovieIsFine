@@ -11,7 +11,7 @@ export default function Home() {
             MovieIsFine
           </h1>
           <p className="text-gray-300 text-center mt-2">
-            发现精彩电影，品味影视人生
+            Move is all you need.
           </p>
         </div>
       </header>
@@ -32,7 +32,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-gray-800 text-gray-400 py-6 mt-8">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <p>MovieIsFine - 你的电影资讯平台</p>
+          <p>MovieIsFine</p>
         </div>
       </footer>
     </div>

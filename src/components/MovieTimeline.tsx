@@ -73,13 +73,13 @@ export default function MovieTimeline({
                 {/* 剧情卡片 */}
                 {isSelected && (
                   <div
-                    className="absolute top-14 left-1/2 -translate-x-1/2 z-10 w-64 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-4 animate-fadeIn"
+                    className="absolute top-14 left-1/2 -ml-32 z-10 w-64 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-4 animate-fadeIn"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {/* 三角箭头 (Border) */}
-                    <div className="absolute -top-[9px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-l-transparent border-r-transparent border-b-gray-700"></div>
+                    <div className="absolute -top-[8px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-l-transparent border-r-transparent border-b-gray-700"></div>
                     {/* 三角箭头 (Background) */}
-                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-l-transparent border-r-transparent border-b-gray-800"></div>
+                    <div className="absolute -top-[7px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-l-transparent border-r-transparent border-b-gray-800"></div>
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -130,11 +130,11 @@ export default function MovieTimeline({
         @keyframes fadeIn {
           from {
             opacity: 0;
-            transform: translateX(-50%) translateY(-4px);
+            transform: translateY(-4px);
           }
           to {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
+            transform: translateY(0);
           }
         }
         .animate-fadeIn {
