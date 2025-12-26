@@ -20,20 +20,20 @@ export default function MovieTimeline({
 
   return (
     <div className="w-full py-6">
-      <h2 className="text-xl font-bold mb-4 flex items-center text-white">
+      <h2 className="text-xl font-bold mb-4 flex items-center text-gray-900 dark:text-white transition-colors duration-300">
         <span className="w-1 h-6 bg-yellow-500 mr-3 rounded"></span>
         剧情时间轴
       </h2>
 
-      <div className="relative bg-gray-800/50 rounded-lg p-6">
+      <div className="relative bg-white/50 dark:bg-gray-800/50 rounded-lg p-6 transition-colors duration-300">
         {/* 时间标签 */}
-        <div className="flex justify-between text-sm text-gray-400 mb-2">
+        <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-2 transition-colors duration-300">
           <span>0</span>
           <span>{duration}分钟</span>
         </div>
 
         {/* 进度条背景 */}
-        <div className="relative h-2 bg-gray-700 rounded-full mb-12 mx-2">
+        <div className="relative h-2 bg-gray-300 dark:bg-gray-700 rounded-full mb-12 mx-2 transition-colors duration-300">
           {/* 节点 */}
           {plotPoints.map((point) => {
             const position = (point.timestamp / duration) * 100;
@@ -56,7 +56,7 @@ export default function MovieTimeline({
                   className={`w-4 h-4 rounded-full border-2 transition-all duration-200 hover:scale-150 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-sm ${
                     isSelected
                       ? "bg-yellow-500 border-yellow-500 scale-150"
-                      : "bg-white border-white hover:bg-yellow-400 hover:border-yellow-400"
+                      : "bg-gray-200 border-gray-200 dark:bg-white dark:border-white hover:bg-yellow-400 hover:border-yellow-400"
                   }`}
                   aria-label={`${point.title} - ${point.timestamp}分钟`}
                 />
@@ -64,7 +64,7 @@ export default function MovieTimeline({
                 {/* 时间标签 */}
                 <div
                   className={`absolute top-7 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap transition-colors duration-200 ${
-                    isSelected ? "text-yellow-500 font-bold" : "text-gray-400"
+                    isSelected ? "text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"
                   }`}
                 >
                   {point.timestamp}′
@@ -73,13 +73,13 @@ export default function MovieTimeline({
                 {/* 剧情卡片 */}
                 {isSelected && (
                   <div
-                    className="absolute top-14 left-1/2 -ml-32 z-10 w-64 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-4 animate-fadeIn"
+                    className="absolute top-14 left-1/2 -ml-32 z-10 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl p-4 animate-fadeIn transition-colors duration-300"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {/* 三角箭头 (Border) */}
-                    <div className="absolute -top-[8px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-l-transparent border-r-transparent border-b-gray-700"></div>
+                    <div className="absolute -top-[9px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-l-transparent border-r-transparent border-b-gray-200 dark:border-b-gray-700 transition-colors duration-300"></div>
                     {/* 三角箭头 (Background) */}
-                    <div className="absolute -top-[7px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-l-transparent border-r-transparent border-b-gray-800"></div>
+                    <div className="absolute -top-[7px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-l-transparent border-r-transparent border-b-white dark:border-b-gray-800 transition-colors duration-300"></div>
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -88,7 +88,7 @@ export default function MovieTimeline({
                         </h3>
                         <button
                           onClick={() => setSelectedPoint(null)}
-                          className="text-gray-500 hover:text-white transition-colors"
+                          className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                           aria-label="关闭"
                         >
                           <svg
@@ -106,10 +106,10 @@ export default function MovieTimeline({
                           </svg>
                         </button>
                       </div>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         {point.timestamp} 分钟
                       </p>
-                      <p className="text-sm text-gray-300 leading-relaxed">
+                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed transition-colors duration-300">
                         {point.description}
                       </p>
                     </div>
