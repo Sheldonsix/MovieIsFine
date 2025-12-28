@@ -64,7 +64,7 @@ export default async function MovieDetailPage({
             {/* Header Info */}
             <div className="flex-1 pt-4 md:pt-20 text-center md:text-left space-y-4">
               <div>
-                <h1 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-2">
+                <h1 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-2 mt-2.5">
                   {movie.title}
                 </h1>
                 {movie.originalTitle && (
