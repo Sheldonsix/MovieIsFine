@@ -1,7 +1,11 @@
 import { movies } from "@/data/movies";
-import MovieCard from "@/components/MovieCard";
+import MovieInfiniteList from "@/components/MovieInfiniteList";
+import { fetchMovies } from "@/app/actions";
 
-export default function Home() {
+export default async function Home() {
+  // Initial load of the first page
+  const initialMovies = await fetchMovies(1);
+
   return (
     <div className="space-y-12 animate-in fade-in duration-500">
       {/* Hero Section */}
@@ -9,7 +13,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-soft-light"></div>
         <div className="absolute top-[-50%] left-[-20%] w-[800px] h-[800px] rounded-full bg-white/10 blur-3xl"></div>
         <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-900/20 blur-3xl"></div>
-        
+
         <div className="relative px-8 py-20 md:py-28 text-center space-y-6">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight drop-shadow-md">
             Movie is all you need.
@@ -33,14 +37,8 @@ export default function Home() {
           </div>
           {/* 这里可以放筛选器或排序按钮 */}
         </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {movies.map((movie) => (
-            <div key={movie.id} className="transform hover:-translate-y-1 transition-transform duration-300">
-              <MovieCard movie={movie} />
-            </div>
-          ))}
-        </div>
+
+        <MovieInfiniteList initialMovies={initialMovies} />
       </section>
     </div>
   );
