@@ -75,18 +75,48 @@ export default async function MovieDetailPage({
               </div>
 
               {/* Rating Badge */}
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
-                 <div className="flex items-center bg-yellow-400/10 dark:bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 px-3 py-1.5 rounded-lg border border-yellow-400/20">
-                  <span className="text-2xl font-bold mr-1">{movie.doubanRating}</span>
-                  <div className="flex flex-col items-start leading-none ml-1">
-                    <span className="text-[10px] opacity-80 uppercase tracking-wider">Douban</span>
-                    <span className="text-xs font-bold">Score</span>
-                  </div>
+              <div className="flex flex-col items-center md:items-start gap-3">
+                {/* Douban - 豆瓣绿 */}
+                <div className="flex items-baseline gap-3">
+                  {movie.doubanUrl ? (
+                    <a
+                      href={movie.doubanUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 px-3 py-1.5 rounded-lg border border-green-500/20 hover:bg-green-500/20 dark:hover:bg-green-500/30 transition-colors"
+                    >
+                      <span className="text-2xl font-bold mr-1">{movie.doubanRating}</span>
+                      <div className="flex flex-col items-start leading-none ml-1">
+                        <span className="text-[10px] opacity-80 uppercase tracking-wider">豆瓣</span>
+                        <span className="text-xs font-bold">评分</span>
+                      </div>
+                    </a>
+                  ) : (
+                    <div className="flex items-center bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 px-3 py-1.5 rounded-lg border border-green-500/20">
+                      <span className="text-2xl font-bold mr-1">{movie.doubanRating}</span>
+                      <div className="flex flex-col items-start leading-none ml-1">
+                        <span className="text-[10px] opacity-80 uppercase tracking-wider">豆瓣</span>
+                        <span className="text-xs font-bold">评分</span>
+                      </div>
+                    </div>
+                  )}
+                  {movie.ratingCount && (
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      {(movie.ratingCount / 10000).toFixed(1)}w 人评价
+                    </span>
+                  )}
                 </div>
-                {movie.ratingCount && (
-                   <span className="text-sm text-gray-500 dark:text-gray-400">
-                    {(movie.ratingCount / 10000).toFixed(1)}w 人参与评价
-                  </span>
+                {/* IMDb - IMDb 黄 */}
+                {movie.imdbId && (
+                  <a
+                    href={`https://www.imdb.com/title/${movie.imdbId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center bg-yellow-400/10 dark:bg-yellow-400/20 text-yellow-600 dark:text-yellow-400 px-3 py-1.5 rounded-lg border border-yellow-400/20 hover:bg-yellow-400/20 dark:hover:bg-yellow-400/30 transition-colors"
+                  >
+                    <span className="text-lg font-bold mr-1.5">IMDb</span>
+                    <span className="text-xs opacity-80">{movie.imdbId}</span>
+                  </a>
                 )}
               </div>
             </div>

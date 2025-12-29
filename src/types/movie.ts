@@ -8,6 +8,8 @@ export interface PlotPoint {
 
 export interface Movie {
   id: string;
+  imdbId?: string;
+  doubanUrl?: string;
   title: string;
   originalTitle?: string;
   poster: string;

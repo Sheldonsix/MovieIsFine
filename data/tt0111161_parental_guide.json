@@ -1,0 +1,438 @@
+{
+  "imdb_id": "tt0111161",
+  "title": "The Shawshank Redemption",
+  "url": "https://www.imdb.com/title/tt0111161/parentalguide/",
+  "content_rating": "Rated R for language and prison violence",
+  "sex_nudity": {
+    "severity": "Mild",
+    "items": [
+      "Male butt shown in the background at the beginning of the movie.",
+      "Brief kissing scene in bed at the beginning.",
+      "Sex is heavily implied at six minutes thirty seconds.",
+      "Pictures of women in the protaganists cell, they are wearing clothing that reveals cleavage. Quick scenes, easy to miss.",
+      "Sex scene against a wall at the beginning of the film. No nudity is shown but sex is shown to happen against a wall.",
+      "Three men try to rape Andy in a warehouse at the 30-minute mark.",
+      "In a mildly lengthy scene a prison is shown full of completely nude men holding a pile of folded towels in front of their penises, buttocks are shown."
+    ]
+  },
+  "violence_gore": {
+    "severity": "Moderate",
+    "items": [
+      "In one scene you could see bloody gun shots on a man. There is a shirt on him so you don't see the injury.",
+      "A man is shot 4 times very quickly in the chest, the blood is seen and after we see him laying on the ground In a pool of blood. The dark lighting makes it hard to see the blood it is still heavily implied.",
+      "The movie contains dark and intense themes, rarely showing blood and gore.",
+      "A narration implies that assault is an occurrence for Andy. One scene involves the same men who usually terrorize him punching and kicking him against the ground and says he will put his penis in Andy's mouth to which Andy replies they shouldn't do that. Non graphic.",
+      "A man hits two others in the face with a film roll. He is then punched twice in the chest and once across the jaw (a dot of blood on his mouth). Shortly after, he is kicked four times in the stomach and hit across the face twice (seen from a distance). We then hear he spent a month in the infirmary.",
+      "A man is hit five times and kicked once. He tries to crawl away, but is dragged offscreen and is implied to be still beaten up. He is then seen injured and bruised in a wheelchair for a few seconds and we hear he spent the rest of his life in a hospital. Not for kids.",
+      "A man tries to fend off a few people in a fight and is beaten offscreen. It's also briefly referenced that he was raped. He then walks with a few bruises seen shortly on his face.",
+      "A man is beaten up by a prison guard, with 12 blows landing. No blood or injuries are visible due to the dark lighting, most of the blows are offscreen. It is later revealed that he died from his injuries.",
+      "One man holds a knife to another man's throat, a tiny wound is seen on his neck."
+    ]
+  },
+  "profanity": {
+    "severity": "Severe",
+    "items": [
+      "There are many uses of f**k, sh*t, d*ck, d*mn, a**, hell, b**ch, f*gg*t, t*t and whore spread with many other profanities. Uses of \"f**k\" evolve around the film, which is known for profanity and prison violence itself. Strong language, this is severe.",
+      "23 uses of \"Sh*t\" & 29 uses of the F-word. At least 5 uses of \"b**ch\"",
+      "10 Gd's."
+    ]
+  },
+  "alcohol_drugs_smoking": {
+    "severity": "Mild",
+    "items": [
+      "A man says he can get people 'reefers' (no other interaction or any smoking or using it however at all)",
+      "Men drink beer after a long day's work . And a prisoner gets cigarettes for his fellow inmates.",
+      "People drink beer on a rooftop in one particular scene.",
+      "One man is drunk and he holds a whiskey bottle in his hands.",
+      "People smoke in several scenes.",
+      "Prisoners deal cigarettes secretly among the bedsheets."
+    ]
+  },
+  "frightening_intense": {
+    "severity": "Moderate",
+    "items": [
+      "The movie can be sometimes harsh and dark in tone.",
+      "Prisoners torment and verbally attack new people who've just arrived, their reactions can be a bit difficult to watch as they scream and cry.",
+      "The film is intended for people 16 over due to strong languange, prison violence and thematic.",
+      "The beatings may be intense to many. There are moments of moderate threat when characters are threatened (normally by guards).",
+      "The prison rape elements could be distressing but, it is never shown just vaguely implied and briefly referenced."
+    ]
+  },
+  "certifications": [
+    {
+      "country": "Argentina",
+      "ratings": [
+        {
+          "rating": "16",
+          "note": "original rating"
+        },
+        {
+          "rating": "13",
+          "note": "re-rating"
+        }
+      ]
+    },
+    {
+      "country": "Australia",
+      "ratings": [
+        {
+          "rating": "MA15+",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Brazil",
+      "ratings": [
+        {
+          "rating": "16",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Canada",
+      "ratings": [
+        {
+          "rating": "14A",
+          "note": "Alberta, British Columbia"
+        },
+        {
+          "rating": "PA",
+          "note": "Manitoba"
+        },
+        {
+          "rating": "18",
+          "note": "Nova Scotia"
+        },
+        {
+          "rating": "AA",
+          "note": "Ontario"
+        },
+        {
+          "rating": "13+",
+          "note": "Québec"
+        },
+        {
+          "rating": "14A",
+          "note": "video rating"
+        }
+      ]
+    },
+    {
+      "country": "Chile",
+      "ratings": [
+        {
+          "rating": "18",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Colombia",
+      "ratings": [
+        {
+          "rating": "12",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Czech Republic",
+      "ratings": [
+        {
+          "rating": "12",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Denmark",
+      "ratings": [
+        {
+          "rating": "15",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Ecuador",
+      "ratings": [
+        {
+          "rating": "18",
+          "note": "self-applied"
+        }
+      ]
+    },
+    {
+      "country": "Egypt",
+      "ratings": [
+        {
+          "rating": "18+",
+          "note": "self-applied"
+        }
+      ]
+    },
+    {
+      "country": "Finland",
+      "ratings": [
+        {
+          "rating": "K-16",
+          "note": ""
+        },
+        {
+          "rating": "K-15/13",
+          "note": ""
+        },
+        {
+          "rating": "K-16/13",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "France",
+      "ratings": [
+        {
+          "rating": "Tous publics avec avertissement",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Germany",
+      "ratings": [
+        {
+          "rating": "12",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Hong Kong",
+      "ratings": [
+        {
+          "rating": "IIB",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Hungary",
+      "ratings": [
+        {
+          "rating": "16",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Iceland",
+      "ratings": [
+        {
+          "rating": "14",
+          "note": ""
+        },
+        {
+          "rating": "16",
+          "note": "video rating"
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "ratings": [
+        {
+          "rating": "U",
+          "note": "2010, cut, video, Tamil dubbed, Telugu dubbed"
+        },
+        {
+          "rating": "UA",
+          "note": "2009, cut, video"
+        },
+        {
+          "rating": "A",
+          "note": "2008, video"
+        }
+      ]
+    },
+    {
+      "country": "Indonesia",
+      "ratings": [
+        {
+          "rating": "18+",
+          "note": "self-applied"
+        }
+      ]
+    },
+    {
+      "country": "Ireland",
+      "ratings": [
+        {
+          "rating": "15",
+          "note": ""
+        },
+        {
+          "rating": "15A",
+          "note": "new rating"
+        }
+      ]
+    },
+    {
+      "country": "Israel",
+      "ratings": [
+        {
+          "rating": "PG",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Italy",
+      "ratings": [
+        {
+          "rating": "T",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Japan",
+      "ratings": [
+        {
+          "rating": "PG-12",
+          "note": ""
+        },
+        {
+          "rating": "G",
+          "note": "2009"
+        }
+      ]
+    },
+    {
+      "country": "Malaysia",
+      "ratings": [
+        {
+          "rating": "18",
+          "note": "re-rating"
+        },
+        {
+          "rating": "(Banned)",
+          "note": "1994, original rating"
+        }
+      ]
+    },
+    {
+      "country": "Mexico",
+      "ratings": [
+        {
+          "rating": "B",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Netherlands",
+      "ratings": [
+        {
+          "rating": "12",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "New Zealand",
+      "ratings": [
+        {
+          "rating": "RP16",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Nigeria",
+      "ratings": [
+        {
+          "rating": "12A",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Norway",
+      "ratings": [
+        {
+          "rating": "15",
+          "note": "1995, cinema rating"
+        }
+      ]
+    },
+    {
+      "country": "Peru",
+      "ratings": [
+        {
+          "rating": "14",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Philippines",
+      "ratings": [
+        {
+          "rating": "R-18",
+          "note": "original rating"
+        },
+        {
+          "rating": "R-13",
+          "note": "re-rating"
+        }
+      ]
+    },
+    {
+      "country": "Poland",
+      "ratings": [
+        {
+          "rating": "16",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Portugal",
+      "ratings": [
+        {
+          "rating": "M/16",
+          "note": "Qualidade"
+        }
+      ]
+    },
+    {
+      "country": "Russia",
+      "ratings": [
+        {
+          "rating": "16+",
+          "note": "video rating"
+        }
+      ]
+    },
+    {
+      "country": "Saudi Arabia",
+      "ratings": [
+        {
+          "rating": "R12",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "country": "Singapore",
+      "ratings": [
+        {
+          "rating": "R(A)",
+          "note": "original rating"
+        }
+      ]
+    }
+  ]
+}
