@@ -1,6 +1,7 @@
 import { movies } from "@/data/movies";
 import MovieInfiniteList from "@/components/MovieInfiniteList";
 import { fetchMovies } from "@/app/actions";
+import { MovieSearch } from "@/components/MovieSearch";
 
 export default async function Home() {
   // Initial load of the first page
@@ -21,6 +22,10 @@ export default async function Home() {
           <p className="text-lg md:text-2xl text-indigo-100 max-w-2xl mx-auto font-medium">
             Find your favorite movie.
           </p>
+          {/* 搜索框 */}
+          <div className="pt-4">
+            <MovieSearch />
+          </div>
         </div>
       </section>
 
