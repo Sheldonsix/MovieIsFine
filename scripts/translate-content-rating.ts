@@ -10,7 +10,7 @@ import { MongoClient } from "mongodb";
 // ============== API 配置（请修改为你的配置）==============
 const AI_API_URL = "YOUR_API_URL"; // 如 https://api.openai.com/v1/chat/completions
 const AI_API_KEY = "YOUR_API_KEY"; // 你的 API Key
-const AI_MODEL = "YOUR_AI_MODEL"; // 如 gpt-3.5-turbo
+const AI_MODEL = "YOUR_MODEL"; // 如 gpt-3.5-turbo
 // =========================================================
 
 const MONGODB_URI =

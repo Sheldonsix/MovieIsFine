@@ -1,22 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getMovieById, getAllMovieIds } from "@/lib/movieService";
+import { getMovieByImdbId, getAllImdbIds } from "@/lib/movieService";
 import MovieTimeline from "@/components/MovieTimeline";
 import ParentalGuide from "@/components/ParentalGuide";
 
 export async function generateStaticParams() {
-  const ids = await getAllMovieIds();
-  return ids.map((id) => ({ id }));
+  const imdbIds = await getAllImdbIds();
+  return imdbIds.map((imdbId) => ({ imdbId }));
 }
 
 export default async function MovieDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ imdbId: string }>;
 }) {
-  const { id } = await params;
-  const movie = await getMovieById(id);
+  const { imdbId } = await params;
+  const movie = await getMovieByImdbId(imdbId);
 
   if (!movie) {
     notFound();

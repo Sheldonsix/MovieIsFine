@@ -31,6 +31,18 @@ export async function getAllMovieIds(): Promise<string[]> {
 }
 
 /**
+ * 获取所有 IMDB ID（用于静态生成）
+ */
+export async function getAllImdbIds(): Promise<string[]> {
+  const db = await getDatabase();
+  const movies = await db
+    .collection("movies")
+    .find({ imdbId: { $exists: true, $ne: "" } }, { projection: { imdbId: 1 } })
+    .toArray();
+  return movies.map((m) => m.imdbId as string);
+}
+
+/**
  * 根据 ID 获取电影
  */
 export async function getMovieById(id: string): Promise<Movie | null> {
