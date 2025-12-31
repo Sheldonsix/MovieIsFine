@@ -1,11 +1,11 @@
-import { movies } from "@/data/movies";
 import MovieInfiniteList from "@/components/MovieInfiniteList";
-import { fetchMovies } from "@/app/actions";
+import { fetchMovies, fetchMovieCount } from "@/app/actions";
 import { MovieSearch } from "@/components/MovieSearch";
 
 export default async function Home() {
   // Initial load of the first page
   const initialMovies = await fetchMovies(1);
+  const movieCount = await fetchMovieCount();
 
   return (
     <div className="space-y-12 animate-in fade-in duration-500">
@@ -17,10 +17,10 @@ export default async function Home() {
 
         <div className="relative px-8 py-20 md:py-28 text-center space-y-6">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight drop-shadow-md">
-            Movie is all you need.
+            Movie is AIl you need.
           </h1>
           <p className="text-lg md:text-2xl text-indigo-100 max-w-2xl mx-auto font-medium">
-            Find your favorite movie.
+            Let seeing movies not awkward anymore.
           </p>
           {/* 搜索框 */}
           <div className="pt-4">
@@ -37,7 +37,7 @@ export default async function Home() {
               热门精选
             </h2>
             <p className="text-gray-500 dark:text-gray-400 mt-2">
-              收录了 {movies.length} 部影史经典
+              收录了 {movieCount} 部影史经典
             </p>
           </div>
           {/* 这里可以放筛选器或排序按钮 */}

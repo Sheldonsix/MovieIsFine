@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getMovieById, movies } from "@/data/movies";
+import { getMovieById, getAllMovieIds } from "@/lib/movieService";
 import MovieTimeline from "@/components/MovieTimeline";
+import ParentalGuide from "@/components/ParentalGuide";
 
 export async function generateStaticParams() {
-  return movies.map((movie) => ({
-    id: movie.id,
-  }));
+  const ids = await getAllMovieIds();
+  return ids.map((id) => ({ id }));
 }
 
 export default async function MovieDetailPage({
@@ -16,7 +16,7 @@ export default async function MovieDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const movie = getMovieById(id);
+  const movie = await getMovieById(id);
 
   if (!movie) {
     notFound();
@@ -77,7 +77,7 @@ export default async function MovieDetailPage({
               {/* Rating Badge */}
               <div className="flex flex-col items-center md:items-start gap-3">
                 {/* Douban - 豆瓣绿 */}
-                <div className="flex items-baseline gap-3">
+                <div className="flex items-baseline-last gap-3">
                   {movie.doubanUrl ? (
                     <a
                       href={movie.doubanUrl}
@@ -85,19 +85,19 @@ export default async function MovieDetailPage({
                       rel="noopener noreferrer"
                       className="flex items-center bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 px-3 py-1.5 rounded-lg border border-green-500/20 hover:bg-green-500/20 dark:hover:bg-green-500/30 transition-colors"
                     >
-                      <span className="text-2xl font-bold mr-1">{movie.doubanRating}</span>
-                      <div className="flex flex-col items-start leading-none ml-1">
+                      <div className="flex flex-col items-start leading-none">
                         <span className="text-[10px] opacity-80 uppercase tracking-wider">豆瓣</span>
                         <span className="text-xs font-bold">评分</span>
                       </div>
+                      <span className="text-2xl font-bold ml-1">{movie.doubanRating}</span>
                     </a>
                   ) : (
                     <div className="flex items-center bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 px-3 py-1.5 rounded-lg border border-green-500/20">
-                      <span className="text-2xl font-bold mr-1">{movie.doubanRating}</span>
-                      <div className="flex flex-col items-start leading-none ml-1">
+                      <div className="flex flex-col items-start leading-none">
                         <span className="text-[10px] opacity-80 uppercase tracking-wider">豆瓣</span>
                         <span className="text-xs font-bold">评分</span>
                       </div>
+                      <span className="text-2xl font-bold ml-1">{movie.doubanRating}</span>
                     </div>
                   )}
                   {movie.ratingCount && (
@@ -150,6 +150,17 @@ export default async function MovieDetailPage({
                       plotPoints={movie.plotPoints}
                     />
                   </div>
+                </div>
+              )}
+
+              {/* Parental Guide Section */}
+              {movie.parentalGuide && (
+                <div className="pt-6 border-t border-gray-100 dark:border-gray-700">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center mb-6">
+                    <span className="w-1.5 h-6 bg-amber-500 rounded-full mr-3"></span>
+                    家长指南
+                  </h3>
+                  <ParentalGuide guide={movie.parentalGuide} />
                 </div>
               )}
             </div>

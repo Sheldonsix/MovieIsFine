@@ -1,18 +1,26 @@
 'use server';
 
-import { movies } from '@/data/movies';
+import {
+  getMovies,
+  getMovieCount,
+  searchMovies as searchMoviesFromDb,
+} from '@/lib/movieService';
 import { Movie } from '@/types/movie';
 
 const ITEMS_PER_PAGE = 24;
 
+/**
+ * 分页获取电影列表
+ */
 export async function fetchMovies(page: number): Promise<Movie[]> {
-  // Simulate network delay for better UX demonstration (optional)
-  // await new Promise(resolve => setTimeout(resolve, 500));
+  return getMovies(page, ITEMS_PER_PAGE);
+}
 
-  const start = (page - 1) * ITEMS_PER_PAGE;
-  const end = start + ITEMS_PER_PAGE;
-
-  return movies.slice(start, end);
+/**
+ * 获取电影总数
+ */
+export async function fetchMovieCount(): Promise<number> {
+  return getMovieCount();
 }
 
 const MAX_SEARCH_RESULTS = 10;
@@ -22,27 +30,5 @@ const MAX_SEARCH_RESULTS = 10;
  * 支持按标题（中文/英文）、导演、演员进行模糊搜索
  */
 export async function searchMovies(query: string): Promise<Movie[]> {
-  if (!query || query.trim().length === 0) {
-    return [];
-  }
-
-  const searchTerm = query.trim().toLowerCase();
-
-  const results = movies.filter((movie) => {
-    // 标题匹配（中文 + 英文原名）
-    const titleMatch = movie.title.toLowerCase().includes(searchTerm);
-    const originalTitleMatch = movie.originalTitle?.toLowerCase().includes(searchTerm);
-
-    // 导演匹配
-    const directorMatch = movie.director.toLowerCase().includes(searchTerm);
-
-    // 演员匹配
-    const castMatch = movie.cast.some((actor) =>
-      actor.toLowerCase().includes(searchTerm)
-    );
-
-    return titleMatch || originalTitleMatch || directorMatch || castMatch;
-  });
-
-  return results.slice(0, MAX_SEARCH_RESULTS);
+  return searchMoviesFromDb(query, MAX_SEARCH_RESULTS);
 }

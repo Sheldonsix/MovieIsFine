@@ -72,11 +72,11 @@ export default function MovieInfiniteList({ initialMovies }: MovieInfiniteListPr
         {loading && (
           <div className="flex items-center gap-2 text-gray-500">
             <Loader2 className="w-6 h-6 animate-spin" />
-            <span>加载更多精彩电影...</span>
+            <span>正在加载更多...</span>
           </div>
         )}
         {!hasMore && movies.length > 0 && (
-          <p className="text-gray-500 text-sm">已经到底啦，没有更多电影了</p>
+          <p className="text-gray-500 text-sm">已经到底啦~</p>
         )}
       </div>
     </>
