@@ -47,3 +47,8 @@ GEMINI.md
 CLAUDE.md
 
 public/movie_pic/
+
+data/scripts/.venv/
+
+data/parental_guides/
+data/*.tar.gz
