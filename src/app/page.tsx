@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { Plus } from "lucide-react";
 import MovieInfiniteList from "@/components/MovieInfiniteList";
 import { fetchMovies, fetchMovieCount } from "@/app/actions";
 import { MovieSearch } from "@/components/MovieSearch";
@@ -42,7 +44,18 @@ export default async function Home() {
               收录了 {movieCount} 部影史经典
             </p>
           </div>
-          {/* 这里可以放筛选器或排序按钮 */}
+          {/* 添加电影按钮 */}
+          <Link
+            href="/add"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl
+              bg-gradient-to-r from-teal-500 to-emerald-500
+              hover:from-teal-600 hover:to-emerald-600
+              text-white font-medium shadow-lg shadow-teal-500/25
+              hover:shadow-teal-500/40 transition-all duration-300"
+          >
+            <Plus className="w-5 h-5" />
+            <span className="hidden sm:inline">添加电影</span>
+          </Link>
         </div>
 
         <MovieInfiniteList initialMovies={initialMovies} />
