@@ -1,6 +1,7 @@
 "use server";
 
 import { scrapeDoubanMovie, DoubanMovieData } from "@/services/doubanScraper";
+import { scrapeAndTranslateParentalGuide } from "@/services/imdbParentalGuideScraper";
 import {
   checkMovieExists,
   createMovie,
@@ -22,6 +23,7 @@ export interface AddMovieResult {
 
 /**
  * 将豆瓣爬取数据转换为电影创建数据
+ * 同时获取家长指南信息（如果有 imdbId）
  */
 async function doubanDataToMovieInput(
   data: DoubanMovieData
@@ -35,6 +37,21 @@ async function doubanDataToMovieInput(
     const localPoster = await downloadPoster(data.poster, tempId);
     if (localPoster) {
       poster = localPoster;
+    }
+  }
+
+  // 获取家长指南并翻译（如果有 imdbId）
+  let parentalGuide: CreateMovieInput["parentalGuide"];
+  if (data.imdbId) {
+    console.log(`Fetching and translating parental guide for ${data.imdbId}...`);
+    const guideResult = await scrapeAndTranslateParentalGuide(data.imdbId);
+    if (guideResult.success && guideResult.data) {
+      parentalGuide = guideResult.data;
+      console.log(`Parental guide fetched and translated for ${data.imdbId}`);
+    } else {
+      console.warn(
+        `Failed to fetch parental guide for ${data.imdbId}: ${guideResult.error}`
+      );
     }
   }
 
@@ -54,6 +71,7 @@ async function doubanDataToMovieInput(
     synopsis: data.synopsis,
     doubanRating: data.doubanRating,
     ratingCount: data.ratingCount,
+    parentalGuide,
   };
 }
 
@@ -62,7 +80,8 @@ async function doubanDataToMovieInput(
  * 1. 校验豆瓣链接
  * 2. 爬取豆瓣电影信息
  * 3. 检查是否已存在
- * 4. 保存到数据库
+ * 4. 获取家长指南（通过 imdbId）
+ * 5. 保存到数据库
  */
 export async function addMovie(doubanUrl: string): Promise<AddMovieResult> {
   // 1. 校验链接格式
