@@ -1,6 +1,7 @@
 import { getDatabase } from "@/lib/mongodb";
 import { Movie } from "@/types/movie";
 import { WithId, Document } from "mongodb";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * 将 MongoDB 文档转换为 Movie 类型
@@ -135,4 +136,89 @@ export async function getMoviesByGenre(
     .toArray();
 
   return docs.map(toMovie);
+}
+
+/**
+ * 检查电影是否已存在（通过 imdbId 或 doubanUrl）
+ */
+export async function checkMovieExists(
+  imdbId?: string,
+  doubanUrl?: string
+): Promise<{ exists: boolean; movie?: Movie }> {
+  const db = await getDatabase();
+
+  // 优先通过 imdbId 检查
+  if (imdbId) {
+    const doc = await db.collection("movies").findOne({ imdbId });
+    if (doc) {
+      return { exists: true, movie: toMovie(doc) };
+    }
+  }
+
+  // 通过 doubanUrl 检查
+  if (doubanUrl) {
+    const doc = await db.collection("movies").findOne({ doubanUrl });
+    if (doc) {
+      return { exists: true, movie: toMovie(doc) };
+    }
+  }
+
+  return { exists: false };
+}
+
+/**
+ * 创建电影记录所需的数据（不包含 id）
+ */
+export type CreateMovieInput = Omit<Movie, "id">;
+
+/**
+ * 创建新电影
+ */
+export async function createMovie(input: CreateMovieInput): Promise<Movie> {
+  const db = await getDatabase();
+
+  // 生成唯一 ID
+  const movie: Movie = {
+    id: uuidv4(),
+    ...input,
+  };
+
+  // 添加时间戳，并移除空值字段（避免唯一索引冲突）
+  const docToInsert: Record<string, unknown> = {
+    ...movie,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  // 移除 undefined 或空字符串的 imdbId（避免唯一索引冲突）
+  if (!docToInsert.imdbId) {
+    delete docToInsert.imdbId;
+  }
+
+  await db.collection("movies").insertOne(docToInsert);
+
+  return movie;
+}
+
+/**
+ * 更新电影记录
+ */
+export async function updateMovie(
+  id: string,
+  updates: Partial<Movie>
+): Promise<Movie | null> {
+  const db = await getDatabase();
+
+  const result = await db.collection("movies").findOneAndUpdate(
+    { id },
+    {
+      $set: {
+        ...updates,
+        updatedAt: new Date(),
+      },
+    },
+    { returnDocument: "after" }
+  );
+
+  return result ? toMovie(result) : null;
 }

@@ -40,18 +40,6 @@ export default async function MovieDetailPage({
           <span className="mx-3 text-gray-300 dark:text-gray-600">/</span>
           <span className="text-gray-900 dark:text-gray-200 truncate">{movie.title}</span>
         </div>
-        {/* 添加电影按钮 */}
-        <Link
-          href="/add"
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg
-            bg-gradient-to-r from-teal-500 to-emerald-500
-            hover:from-teal-600 hover:to-emerald-600
-            text-white text-sm font-medium shadow-md shadow-teal-500/25
-            hover:shadow-teal-500/40 transition-all duration-300"
-        >
-          <Plus className="w-4 h-4" />
-          <span className="hidden sm:inline">添加电影</span>
-        </Link>
       </nav>
 
       {/* Main Content Card */}
