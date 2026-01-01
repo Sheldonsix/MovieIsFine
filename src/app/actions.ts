@@ -4,7 +4,7 @@ import {
   getMovies,
   getMovieCount,
   searchMovies as searchMoviesFromDb,
-} from '@/lib/movieService';
+} from '@/services/movieService';
 import { Movie } from '@/types/movie';
 
 const ITEMS_PER_PAGE = 24;

@@ -1,10 +1,10 @@
 /**
  * 电影数据迁移脚本 - 将 movies.ts 中的数据导入 MongoDB
- * 运行: npx tsx scripts/migrate-movies.ts
+ * 运行: npx tsx scripts/migration/migrate-movies.ts
  */
 
 import { MongoClient } from "mongodb";
-import { movies } from "../src/data/movies";
+import { movies } from "../../src/data/movies";
 
 const MONGODB_URI =
   process.env.MONGODB_URI ||

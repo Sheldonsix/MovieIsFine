@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import type { ParentalGuide } from '@/types/parentalGuide';
 
-const PARENTAL_GUIDES_DIR = path.join(process.cwd(), 'data', 'parental_guides');
+const PARENTAL_GUIDES_DIR = path.join(process.cwd(), 'scripts', 'scraping', 'parental_guides');
 
 /**
  * 根据 IMDB ID 获取家长指南数据

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getMovieByImdbId, getAllImdbIds } from "@/lib/movieService";
+import { getMovieByImdbId, getAllImdbIds } from "@/services/movieService";
 import MovieTimeline from "@/components/MovieTimeline";
 import ParentalGuide from "@/components/ParentalGuide";
 

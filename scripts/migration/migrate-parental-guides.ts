@@ -1,6 +1,6 @@
 /**
  * 家长指南数据迁移脚本 - 将 parental_guides 目录中的 JSON 文件导入到 MongoDB 电影记录中
- * 运行: npx tsx scripts/migrate-parental-guides.ts
+ * 运行: npx tsx scripts/migration/migrate-parental-guides.ts
  */
 
 import { MongoClient } from "mongodb";
@@ -13,7 +13,8 @@ const MONGODB_URI =
 const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "movieisfine";
 const PARENTAL_GUIDES_DIR = path.join(
   process.cwd(),
-  "data",
+  "scripts",
+  "scraping",
   "parental_guides"
 );
 
