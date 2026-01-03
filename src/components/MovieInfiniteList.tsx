@@ -150,12 +150,12 @@ export default function MovieInfiniteList({ initialMovies, initialSort }: MovieI
                 key={option.field}
                 onClick={() => handleSortClick(option.field)}
                 disabled={isChangingSort}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold
                   transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
                   ${
                     isActive
-                      ? 'bg-indigo-500 text-white shadow-md shadow-indigo-500/25'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 scale-105'
+                      : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-700'
                   }`}
                 title={
                   isActive

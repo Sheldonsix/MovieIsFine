@@ -26,16 +26,16 @@ export default async function Home({ searchParams }: HomeProps) {
       {/* Hero Section */}
       <section className="relative z-10 rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white shadow-2xl dark:shadow-purple-900/20">
         <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-soft-light"></div>
+          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
           <div className="absolute top-[-50%] left-[-20%] w-[800px] h-[800px] rounded-full bg-white/10 blur-3xl"></div>
           <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-900/20 blur-3xl"></div>
         </div>
 
-        <div className="relative z-10 px-8 py-20 md:py-28 text-center space-y-6">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight drop-shadow-md">
-            Movie is AIl you need.
+        <div className="relative z-10 px-8 py-24 md:py-32 text-center space-y-8">
+          <h1 className="text-4xl md:text-7xl font-black tracking-tighter drop-shadow-lg">
+            Movie is All you need.
           </h1>
-          <p className="text-lg md:text-2xl text-indigo-100 max-w-2xl mx-auto font-medium">
+          <p className="text-lg md:text-2xl text-white/90 max-w-2xl mx-auto font-medium leading-relaxed">
             No more awkward movie nights.
           </p>
           {/* 搜索框 */}

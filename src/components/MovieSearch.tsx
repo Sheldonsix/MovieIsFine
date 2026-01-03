@@ -118,9 +118,9 @@ export function MovieSearch() {
   return (
     <div ref={containerRef} className="relative w-full max-w-xl mx-auto">
       {/* 搜索输入框 */}
-      <div className="relative z-50">
+      <div className="relative z-50 group">
         <Search
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-500 transition-colors duration-300"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-500 transition-colors duration-300 z-10 pointer-events-none"
           size={20}
         />
         <input
@@ -130,12 +130,12 @@ export function MovieSearch() {
           onChange={(e) => handleQueryChange(e.target.value)}
           onKeyDown={handleKeyDown}
           onFocus={() => query.trim().length > 0 && setIsOpen(true)}
-          placeholder="搜索电影、导演、演员..."
+          placeholder="探索你的下一部电影..."
           className="w-full pl-12 pr-10 py-3 rounded-xl border border-gray-200 dark:border-gray-700
-            bg-white/80 dark:bg-gray-800/80
+            bg-white/90 dark:bg-gray-900/90 backdrop-blur-md
             text-gray-900 dark:text-white
             placeholder-gray-400 dark:placeholder-gray-500
-            shadow-sm hover:shadow-md focus:shadow-lg
+            shadow-xl hover:shadow-2xl focus:shadow-indigo-500/20
             focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50
             transition-all duration-300 ease-out"
         />

@@ -48,6 +48,7 @@ CLAUDE.md
 
 public/movie_pic/
 public/posters/
+paste_pic/
 
 # scraping data
 scripts/scraping/parental_guides/
