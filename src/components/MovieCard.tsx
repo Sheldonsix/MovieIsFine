@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Calendar } from "lucide-react";
 import { Movie } from "@/types/movie";
 
 interface MovieCardProps {
@@ -31,7 +32,15 @@ export default function MovieCard({ movie }: MovieCardProps) {
               {movie.originalTitle}
             </p>
           )}
-          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-1 pt-1">导演: {movie.director}</p>
+          <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400 pt-1">
+            <p className="line-clamp-1">导演: {movie.director}</p>
+            {movie.releaseDate && (
+              <p className="flex items-center gap-1 text-gray-500 dark:text-gray-500">
+                <Calendar className="w-3.5 h-3.5" />
+                {movie.releaseDate.slice(0, 4)} 年上映
+              </p>
+            )}
+          </div>
           <div className="flex flex-wrap gap-1.5 mt-3">
             {movie.genres.slice(0, 3).map((genre) => (
               <span
