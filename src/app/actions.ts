@@ -4,6 +4,7 @@ import {
   getMovies,
   getMovieCount,
   searchMovies as searchMoviesFromDb,
+  SortConfig,
 } from '@/services/movieService';
 import { Movie } from '@/types/movie';
 
@@ -11,9 +12,14 @@ const ITEMS_PER_PAGE = 24;
 
 /**
  * 分页获取电影列表
+ * @param page 页码
+ * @param sortConfig 排序配置
  */
-export async function fetchMovies(page: number): Promise<Movie[]> {
-  return getMovies(page, ITEMS_PER_PAGE);
+export async function fetchMovies(
+  page: number,
+  sortConfig: SortConfig = { field: 'rating', order: 'desc' }
+): Promise<Movie[]> {
+  return getMovies(page, ITEMS_PER_PAGE, sortConfig);
 }
 
 /**

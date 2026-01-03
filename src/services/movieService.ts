@@ -62,19 +62,71 @@ export async function getMovieByImdbId(imdbId: string): Promise<Movie | null> {
 }
 
 /**
+ * 排序字段
+ */
+export type SortField = "rating" | "releaseDate" | "title";
+
+/**
+ * 排序方向
+ */
+export type SortOrder = "asc" | "desc";
+
+/**
+ * 排序配置
+ */
+export interface SortConfig {
+  field: SortField;
+  order: SortOrder;
+}
+
+/**
+ * 解析排序字符串为排序配置
+ * @param sortStr 排序字符串，如 "rating_desc"、"releaseDate_asc"、"title_asc"
+ */
+export function parseSortString(sortStr: string): SortConfig {
+  const [field, order] = sortStr.split("_") as [SortField, SortOrder];
+
+  // 验证字段有效性
+  const validFields: SortField[] = ["rating", "releaseDate", "title"];
+  const validOrders: SortOrder[] = ["asc", "desc"];
+
+  return {
+    field: validFields.includes(field) ? field : "rating",
+    order: validOrders.includes(order) ? order : "desc",
+  };
+}
+
+/**
+ * 排序字段映射到数据库字段
+ */
+const SORT_FIELD_MAP: Record<SortField, string> = {
+  rating: "doubanRating",
+  releaseDate: "releaseDate",
+  title: "title",
+};
+
+/**
  * 分页获取电影列表
+ * @param page 页码
+ * @param limit 每页数量
+ * @param sortConfig 排序配置
  */
 export async function getMovies(
   page: number,
-  limit: number = 24
+  limit: number = 24,
+  sortConfig: SortConfig = { field: "rating", order: "desc" }
 ): Promise<Movie[]> {
   const db = await getDatabase();
   const skip = (page - 1) * limit;
 
+  // 根据排序配置选择排序字段和方向
+  const sortField = SORT_FIELD_MAP[sortConfig.field];
+  const sortDirection = sortConfig.order === "asc" ? 1 : -1;
+
   const docs = await db
     .collection("movies")
     .find({})
-    .sort({ doubanRating: -1 })
+    .sort({ [sortField]: sortDirection })
     .skip(skip)
     .limit(limit)
     .toArray();

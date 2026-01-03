@@ -2,11 +2,23 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import MovieInfiniteList from "@/components/MovieInfiniteList";
 import { fetchMovies, fetchMovieCount } from "@/app/actions";
+import { parseSortString, type SortConfig } from "@/services/movieService";
 import { MovieSearch } from "@/components/MovieSearch";
 
-export default async function Home() {
-  // Initial load of the first page
-  const initialMovies = await fetchMovies(1);
+interface HomeProps {
+  searchParams: Promise<{ sort?: string }>;
+}
+
+export default async function Home({ searchParams }: HomeProps) {
+  const params = await searchParams;
+
+  // 解析排序参数，默认按评分降序排序
+  const sortConfig: SortConfig = params.sort
+    ? parseSortString(params.sort)
+    : { field: "rating", order: "desc" };
+
+  // Initial load of the first page with sort parameter
+  const initialMovies = await fetchMovies(1, sortConfig);
   const movieCount = await fetchMovieCount();
 
   return (
@@ -58,7 +70,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        <MovieInfiniteList initialMovies={initialMovies} />
+        <MovieInfiniteList initialMovies={initialMovies} initialSort={sortConfig} />
       </section>
     </div>
   );
