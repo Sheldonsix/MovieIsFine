@@ -11,6 +11,7 @@ import type { ParentalGuide } from "./parentalGuide";
 
 export interface Movie {
   id: string;
+  doubanId: string; // 豆瓣 ID（从豆瓣 URL 提取）
   imdbId?: string;
   doubanUrl?: string;
   title: string;

@@ -88,8 +88,8 @@ export default function AddMoviePage() {
   };
 
   const handleGoToMovie = () => {
-    if (result?.movie?.imdbId) {
-      router.push(`/movie/${result.movie.imdbId}`);
+    if (result?.movie?.doubanId) {
+      router.push(`/movie/${result.movie.doubanId}`);
     }
   };
 
@@ -278,7 +278,7 @@ export default function AddMoviePage() {
                       {result.error}
                     </p>
                   )}
-                  {result.success && result.movie?.imdbId && (
+                  {result.success && result.movie?.doubanId && (
                     <button
                       onClick={handleGoToMovie}
                       className="mt-3 text-sm text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-medium flex items-center gap-1 transition-colors"

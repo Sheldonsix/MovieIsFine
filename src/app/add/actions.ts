@@ -2,6 +2,7 @@
 
 import { scrapeDoubanMovie, DoubanMovieData } from "@/services/doubanScraper";
 import { scrapeAndTranslateParentalGuide } from "@/services/imdbParentalGuideScraper";
+import { scrapeImdbRating } from "@/services/imdbRatingScraper";
 import {
   checkMovieExists,
   createMovie,
@@ -23,7 +24,7 @@ export interface AddMovieResult {
 
 /**
  * 将豆瓣爬取数据转换为电影创建数据
- * 同时获取家长指南信息（如果有 imdbId）
+ * 同时获取家长指南和 IMDb 评分信息（如果有 imdbId）
  */
 async function doubanDataToMovieInput(
   data: DoubanMovieData
@@ -55,8 +56,28 @@ async function doubanDataToMovieInput(
     }
   }
 
+  // 获取 IMDb 评分（如果有 imdbId）
+  let imdbRating: number | undefined;
+  let imdbRatingCount: number | undefined;
+  if (data.imdbId) {
+    console.log(`Fetching IMDb rating for ${data.imdbId}...`);
+    const ratingResult = await scrapeImdbRating(data.imdbId);
+    if (ratingResult.success && ratingResult.data) {
+      imdbRating = ratingResult.data.rating ?? undefined;
+      imdbRatingCount = ratingResult.data.ratingCount ?? undefined;
+      console.log(
+        `IMDb rating fetched: ${imdbRating}/10 (${imdbRatingCount?.toLocaleString()} votes)`
+      );
+    } else {
+      console.warn(
+        `Failed to fetch IMDb rating for ${data.imdbId}: ${ratingResult.error}`
+      );
+    }
+  }
+
   return {
     imdbId: data.imdbId,
+    doubanId: data.doubanId,
     doubanUrl: data.doubanUrl,
     title: data.title,
     originalTitle: data.originalTitle,
@@ -71,6 +92,8 @@ async function doubanDataToMovieInput(
     synopsis: data.synopsis,
     doubanRating: data.doubanRating,
     ratingCount: data.ratingCount,
+    imdbRating,
+    imdbRatingCount,
     parentalGuide,
   };
 }
@@ -79,9 +102,10 @@ async function doubanDataToMovieInput(
  * Server Action: 添加电影
  * 1. 校验豆瓣链接
  * 2. 爬取豆瓣电影信息
- * 3. 检查是否已存在
- * 4. 获取家长指南（通过 imdbId）
- * 5. 保存到数据库
+ * 3. 检查是否为剧集（拦截剧集）
+ * 4. 检查是否已存在
+ * 5. 获取家长指南和 IMDb 评分（通过 imdbId）
+ * 6. 保存到数据库
  */
 export async function addMovie(doubanUrl: string): Promise<AddMovieResult> {
   // 1. 校验链接格式
@@ -108,7 +132,16 @@ export async function addMovie(doubanUrl: string): Promise<AddMovieResult> {
 
     const movieData = scrapeResult.data;
 
-    // 3. 检查电影是否已存在
+    // 3. 检查是否为剧集
+    if (movieData.isTVSeries) {
+      return {
+        success: false,
+        message: "不支持添加剧集",
+        error: `《${movieData.title}》是剧集，本站暂不支持添加剧集，仅支持电影`,
+      };
+    }
+
+    // 4. 检查电影是否已存在
     const existsResult = await checkMovieExists(
       movieData.imdbId,
       movieData.doubanUrl
@@ -123,7 +156,7 @@ export async function addMovie(doubanUrl: string): Promise<AddMovieResult> {
       };
     }
 
-    // 4. 创建电影记录（包括下载海报）
+    // 5. 创建电影记录（包括下载海报、获取家长指南和 IMDb 评分）
     const movieInput = await doubanDataToMovieInput(movieData);
     const movie = await createMovie(movieInput);
 

@@ -25,6 +25,7 @@ export interface DoubanMovieData {
   doubanRating: number;
   ratingCount?: number;
   imdbId?: string;
+  isTVSeries?: boolean; // 是否为剧集
 }
 
 /**
@@ -132,6 +133,10 @@ export async function scrapeDoubanMovie(
 
     // 提取 #info 区块的文本信息（后面多处使用）
     const infoText = $("#info").text() || "";
+
+    // 检测是否为剧集
+    // 剧集特征：包含"集数"或"单集片长"关键词
+    const isTVSeries = /集数/.test(infoText) || /单集片长/.test(infoText);
 
     // 提取电影标题
     // 豆瓣标题格式: "中文名 原名" 或只有中文名
@@ -330,6 +335,7 @@ export async function scrapeDoubanMovie(
       doubanRating,
       ratingCount,
       imdbId,
+      isTVSeries,
     };
 
     return {

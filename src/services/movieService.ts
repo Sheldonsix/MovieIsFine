@@ -32,6 +32,18 @@ export async function getAllMovieIds(): Promise<string[]> {
 }
 
 /**
+ * 获取所有豆瓣 ID（用于静态生成）
+ */
+export async function getAllDoubanIds(): Promise<string[]> {
+  const db = await getDatabase();
+  const movies = await db
+    .collection("movies")
+    .find({ doubanId: { $exists: true, $ne: "" } }, { projection: { doubanId: 1 } })
+    .toArray();
+  return movies.map((m) => m.doubanId as string);
+}
+
+/**
  * 获取所有 IMDB ID（用于静态生成）
  */
 export async function getAllImdbIds(): Promise<string[]> {
@@ -49,6 +61,15 @@ export async function getAllImdbIds(): Promise<string[]> {
 export async function getMovieById(id: string): Promise<Movie | null> {
   const db = await getDatabase();
   const doc = await db.collection("movies").findOne({ id });
+  return doc ? toMovie(doc) : null;
+}
+
+/**
+ * 根据豆瓣 ID 获取电影
+ */
+export async function getMovieByDoubanId(doubanId: string): Promise<Movie | null> {
+  const db = await getDatabase();
+  const doc = await db.collection("movies").findOne({ doubanId });
   return doc ? toMovie(doc) : null;
 }
 

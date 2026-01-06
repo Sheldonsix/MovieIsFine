@@ -1,22 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getMovieByImdbId, getAllImdbIds } from "@/services/movieService";
+import { getMovieByDoubanId, getAllDoubanIds } from "@/services/movieService";
 import MovieTimeline from "@/components/MovieTimeline";
 import ParentalGuide from "@/components/ParentalGuide";
 
 export async function generateStaticParams() {
-  const imdbIds = await getAllImdbIds();
-  return imdbIds.map((imdbId) => ({ imdbId }));
+  const doubanIds = await getAllDoubanIds();
+  return doubanIds.map((doubanId) => ({ doubanId }));
 }
 
 export default async function MovieDetailPage({
   params,
 }: {
-  params: Promise<{ imdbId: string }>;
+  params: Promise<{ doubanId: string }>;
 }) {
-  const { imdbId } = await params;
-  const movie = await getMovieByImdbId(imdbId);
+  const { doubanId } = await params;
+  const movie = await getMovieByDoubanId(doubanId);
 
   if (!movie) {
     notFound();

@@ -71,10 +71,10 @@ export function MovieSearch() {
 
   // 跳转到电影详情页
   const navigateToMovie = useCallback(
-    (imdbId: string) => {
+    (doubanId: string) => {
       setIsOpen(false);
       setQuery("");
-      router.push(`/movie/${imdbId}`);
+      router.push(`/movie/${doubanId}`);
     },
     [router]
   );
@@ -97,7 +97,7 @@ export function MovieSearch() {
       case "Enter":
         e.preventDefault();
         if (selectedIndex >= 0 && selectedIndex < results.length) {
-          navigateToMovie(results[selectedIndex].imdbId || "");
+          navigateToMovie(results[selectedIndex].doubanId);
         }
         break;
       case "Escape":
@@ -176,9 +176,9 @@ export function MovieSearch() {
           ) : results.length > 0 ? (
             <ul className="max-h-80 overflow-y-auto">
               {results.map((movie, index) => (
-                <li key={movie.imdbId}>
+                <li key={movie.doubanId}>
                   <button
-                    onClick={() => navigateToMovie(movie.imdbId || "")}
+                    onClick={() => navigateToMovie(movie.doubanId)}
                     onMouseEnter={() => setSelectedIndex(index)}
                     className={`group w-full flex items-center gap-4 p-2 rounded-xl text-left transition-all duration-200
                       ${index === selectedIndex
