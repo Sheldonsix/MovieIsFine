@@ -26,6 +26,8 @@ export interface Movie {
   synopsis: string;
   doubanRating: number;
   ratingCount?: number;
+  imdbRating?: number; // IMDb 评分
+  imdbRatingCount?: number; // IMDb 评价人数
   plotPoints?: PlotPoint[]; // 剧情节点（≤20个）
   parentalGuide?: ParentalGuide; // 家长指南
 }

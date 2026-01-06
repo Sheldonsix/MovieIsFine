@@ -105,18 +105,42 @@ export default async function MovieDetailPage({
 
                 {/* IMDb Card */}
                 {movie.imdbId && (
-                  <a
-                    href={`https://www.imdb.com/title/${movie.imdbId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl p-1 pr-4 border border-yellow-100 dark:border-yellow-800/30 group hover:bg-yellow-100 transition-colors"
-                  >
-                    <div className="bg-yellow-400 text-black rounded-xl px-3 py-2 mr-3 font-black text-sm uppercase tracking-tight">IMDb</div>
-                    <div className="flex flex-col text-left">
-                      <span className="text-xs font-bold text-yellow-700 dark:text-yellow-500 leading-tight">查看资料</span>
-                      <span className="text-[10px] text-yellow-600/70 dark:text-yellow-500/70 font-mono">{movie.imdbId}</span>
-                    </div>
-                  </a>
+                  movie.imdbRating ? (
+                    <a
+                      href={`https://www.imdb.com/title/${movie.imdbId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl p-1 pr-4 border border-yellow-100 dark:border-yellow-800/30 group hover:bg-yellow-100 transition-colors"
+                    >
+                      <div className="bg-yellow-400 text-black rounded-xl px-3 py-2 mr-3 font-black text-sm uppercase tracking-tight">IMDb</div>
+                      <div className="flex flex-col">
+                        <div className="flex items-baseline">
+                          <span className="text-2xl font-bold text-yellow-700 dark:text-yellow-400 leading-none">{movie.imdbRating}</span>
+                          <span className="text-xs text-yellow-600/60 dark:text-yellow-500/60 ml-0.5 font-medium">/10</span>
+                        </div>
+                        {movie.imdbRatingCount && (
+                          <span className="text-[10px] text-yellow-600/70 dark:text-yellow-500/70 font-semibold uppercase tracking-tighter">
+                            {movie.imdbRatingCount >= 10000
+                              ? `${(movie.imdbRatingCount / 10000).toFixed(1)}W 评价`
+                              : `${movie.imdbRatingCount.toLocaleString()} 评价`}
+                          </span>
+                        )}
+                      </div>
+                    </a>
+                  ) : (
+                    <a
+                      href={`https://www.imdb.com/title/${movie.imdbId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl p-1 pr-4 border border-yellow-100 dark:border-yellow-800/30 group hover:bg-yellow-100 transition-colors"
+                    >
+                      <div className="bg-yellow-400 text-black rounded-xl px-3 py-2 mr-3 font-black text-sm uppercase tracking-tight">IMDb</div>
+                      <div className="flex flex-col text-left">
+                        <span className="text-xs font-bold text-yellow-700 dark:text-yellow-500 leading-tight">查看资料</span>
+                        <span className="text-[10px] text-yellow-600/70 dark:text-yellow-500/70 font-mono">{movie.imdbId}</span>
+                      </div>
+                    </a>
+                  )
                 )}
               </div>
             </div>
