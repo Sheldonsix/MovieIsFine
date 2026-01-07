@@ -88,7 +88,7 @@ export default async function MovieDetailPage({
               {/* Rating Badges */}
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
                 {/* Douban Card */}
-                <div className="flex items-center bg-green-50 dark:bg-green-900/20 rounded-2xl p-1 pr-4 border border-green-100 dark:border-green-800/30 group hover:bg-green-100 transition-colors">
+                <a href={movie.doubanUrl} target="_blank" rel="noopener noreferrer" className="flex items-center bg-green-50 dark:bg-green-900/20 rounded-2xl p-1 pr-4 border border-green-100 dark:border-green-800/30 group hover:bg-green-100 transition-colors">
                   <div className="bg-green-500 text-white rounded-xl px-3 py-2 mr-3 font-bold text-sm">豆瓣</div>
                   <div className="flex flex-col">
                     <div className="flex items-baseline">
@@ -101,7 +101,7 @@ export default async function MovieDetailPage({
                       </span>
                     )}
                   </div>
-                </div>
+                </a>
 
                 {/* IMDb Card */}
                 {movie.imdbId && (

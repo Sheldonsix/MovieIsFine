@@ -1,6 +1,7 @@
 /**
  * 翻译服务
  * 使用 OpenAI 兼容 API 将英文内容翻译成中文
+ * 支持模型列表，翻译失败时自动切换到下一个模型
  */
 
 interface TranslationResult {
@@ -23,16 +24,36 @@ interface ChatCompletionResponse {
 }
 
 /**
- * 调用 OpenAI 兼容 API 进行翻译
+ * 获取可用的模型列表
+ * 优先使用 OPENAI_MODEL_LIST，否则使用 OPENAI_MODEL
  */
-async function callTranslationAPI(text: string): Promise<TranslationResult> {
+function getModelList(): string[] {
+  const modelList = process.env.OPENAI_MODEL_LIST;
+  if (modelList) {
+    return modelList.split(",").map((m) => m.trim()).filter(Boolean);
+  }
+
+  const singleModel = process.env.OPENAI_MODEL;
+  if (singleModel) {
+    return [singleModel];
+  }
+
+  return [];
+}
+
+/**
+ * 调用 OpenAI 兼容 API 进行翻译（使用指定模型）
+ */
+async function callTranslationAPIWithModel(
+  text: string,
+  model: string
+): Promise<TranslationResult> {
   const apiBase = process.env.OPENAI_API_BASE;
   const apiKey = process.env.OPENAI_API_KEY;
-  const model = process.env.OPENAI_MODEL;
   const systemPrompt = process.env.TRANSLATE_SYSTEM_PROMPT;
   const userPrompt = process.env.TRANSLATE_USER_PROMPT;
 
-  if (!apiBase || !apiKey || !model) {
+  if (!apiBase || !apiKey) {
     return {
       success: false,
       error: "翻译 API 配置缺失",
@@ -71,7 +92,7 @@ async function callTranslationAPI(text: string): Promise<TranslationResult> {
       const errorText = await response.text();
       return {
         success: false,
-        error: `API 请求失败: ${response.status} - ${errorText}`,
+        error: `API 请求失败 [${model}]: ${response.status} - ${errorText}`,
       };
     }
 
@@ -81,7 +102,7 @@ async function callTranslationAPI(text: string): Promise<TranslationResult> {
     if (!translatedText) {
       return {
         success: false,
-        error: "API 返回内容为空",
+        error: `API 返回内容为空 [${model}]`,
       };
     }
 
@@ -92,9 +113,47 @@ async function callTranslationAPI(text: string): Promise<TranslationResult> {
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "翻译请求失败",
+      error: `[${model}] ${error instanceof Error ? error.message : "翻译请求失败"}`,
     };
   }
+}
+
+/**
+ * 调用翻译 API，支持模型列表和失败切换
+ */
+async function callTranslationAPI(text: string): Promise<TranslationResult> {
+  const models = getModelList();
+
+  if (models.length === 0) {
+    return {
+      success: false,
+      error: "未配置翻译模型（OPENAI_MODEL 或 OPENAI_MODEL_LIST）",
+    };
+  }
+
+  const errors: string[] = [];
+
+  // 依次尝试每个模型
+  for (const model of models) {
+    const result = await callTranslationAPIWithModel(text, model);
+
+    if (result.success && result.text) {
+      // 检查翻译结果是否包含中文（确保不是返回原文）
+      if (/[\u4e00-\u9fa5]/.test(result.text)) {
+        return result;
+      } else {
+        errors.push(`[${model}] 翻译结果不包含中文`);
+      }
+    } else {
+      errors.push(result.error || `[${model}] 未知错误`);
+    }
+  }
+
+  // 所有模型都失败
+  return {
+    success: false,
+    error: `所有模型均失败: ${errors.join("; ")}`,
+  };
 }
 
 /**
@@ -156,7 +215,7 @@ export async function translateTexts(texts: string[]): Promise<string[]> {
   }
 
   // 构建结果数组，保持与输入相同的顺序
-  return texts.map((originalText, i) => {
+  return texts.map((originalText) => {
     if (!originalText || originalText.trim().length === 0) {
       return "";
     }
