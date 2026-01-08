@@ -84,11 +84,12 @@ async function fixParentalGuideTranslation() {
 
           if (needsTranslation) {
             console.log(`[${i + 1}/${moviesWithGuide.length}] [${movie.title}] 翻译 ${key} (${category.items.length} 条)...`);
-            await delay(1000);
             const translatedItems = await translateTexts(category.items);
             if (hasChineseContent(translatedItems)) {
               updates[`parentalGuide.${key}.items_zh`] = translatedItems;
               needsUpdate = true;
+            } else {
+              console.log(`[${i + 1}/${moviesWithGuide.length}] [${movie.title}] ${key} 翻译失败（仍为英文）`);
             }
           }
         }
