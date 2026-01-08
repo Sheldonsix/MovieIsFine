@@ -132,7 +132,6 @@ async function callTranslationAPI(text: string): Promise<TranslationResult> {
   }
 
   const errors: string[] = [];
-
   // 依次尝试每个模型
   for (const model of models) {
     const result = await callTranslationAPIWithModel(text, model);
@@ -174,8 +173,54 @@ export async function translateText(text: string): Promise<string> {
 }
 
 /**
+ * 检测字符串是否包含中文
+ */
+function containsChinese(str: string): boolean {
+  return /[\u4e00-\u9fa5]/.test(str);
+}
+
+/**
+ * 解析带序号格式的翻译结果
+ * 格式: [1] 翻译内容1 ---ITEM_SEPARATOR--- [2] 翻译内容2
+ */
+function parseNumberedFormat(text: string): Map<number, string> {
+  const translatedMap = new Map<number, string>();
+  const parts = text.split(/---ITEM_SEPARATOR---|(?=\[\d+\])/).filter(Boolean);
+
+  for (const part of parts) {
+    const match = part.match(/^\[(\d+)\]\s*([\s\S]*)/);
+    if (match) {
+      const index = parseInt(match[1], 10) - 1;
+      const content = match[2].trim();
+      if (content) {
+        translatedMap.set(index, content);
+      }
+    }
+  }
+
+  return translatedMap;
+}
+
+/**
+ * 解析按换行分割的翻译结果（容错策略）
+ */
+function parseByNewlines(text: string, expectedCount: number): string[] {
+  // 按双换行或单换行分割
+  let parts = text.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+
+  // 如果分割结果数量不匹配，尝试单换行分割
+  if (parts.length !== expectedCount) {
+    parts = text.split(/\n/).map((p) => p.trim()).filter(Boolean);
+  }
+
+  // 移除可能残留的序号前缀
+  return parts.map((p) => p.replace(/^\[\d+\]\s*/, "").trim());
+}
+
+/**
  * 批量翻译文本数组
  * 为减少 API 调用次数，将多个文本合并为一次请求
+ * 支持多种解析策略以增强容错性
  */
 export async function translateTexts(texts: string[]): Promise<string[]> {
   if (texts.length === 0) {
@@ -201,27 +246,66 @@ export async function translateTexts(texts: string[]): Promise<string[]> {
     return texts; // 失败时返回原文
   }
 
-  // 解析翻译结果
-  const translatedParts = result.text.split(/---ITEM_SEPARATOR---|(?=\[\d+\])/).filter(Boolean);
-  const translatedMap = new Map<number, string>();
+  const translatedText = result.text.trim();
 
-  for (const part of translatedParts) {
-    const match = part.match(/^\[(\d+)\]\s*([\s\S]*)/);
-    if (match) {
-      const index = parseInt(match[1], 10) - 1;
-      const text = match[2].trim();
-      translatedMap.set(index, text);
+  // 策略1: 单条文本直接使用翻译结果
+  if (validTexts.length === 1) {
+    // 移除可能的序号前缀
+    const cleanText = translatedText.replace(/^\[\d+\]\s*/, "").trim();
+    if (containsChinese(cleanText)) {
+      return texts.map((originalText) =>
+        originalText && originalText.trim().length > 0 ? cleanText : ""
+      );
     }
   }
 
-  // 构建结果数组，保持与输入相同的顺序
-  return texts.map((originalText) => {
-    if (!originalText || originalText.trim().length === 0) {
-      return "";
+  // 策略2: 尝试解析带序号格式
+  const translatedMap = parseNumberedFormat(translatedText);
+
+  if (translatedMap.size === validTexts.length) {
+    // 完全匹配，直接使用
+    return texts.map((originalText) => {
+      if (!originalText || originalText.trim().length === 0) {
+        return "";
+      }
+      const validIndex = validTexts.indexOf(originalText);
+      return translatedMap.get(validIndex) || originalText;
+    });
+  }
+
+  // 策略3: 按换行分割（容错）
+  if (translatedMap.size < validTexts.length) {
+    const parsedByNewlines = parseByNewlines(translatedText, validTexts.length);
+
+    // 如果换行分割数量匹配且包含中文，使用该结果
+    if (
+      parsedByNewlines.length === validTexts.length &&
+      parsedByNewlines.some(containsChinese)
+    ) {
+      return texts.map((originalText) => {
+        if (!originalText || originalText.trim().length === 0) {
+          return "";
+        }
+        const validIndex = validTexts.indexOf(originalText);
+        return parsedByNewlines[validIndex] || originalText;
+      });
     }
-    const validIndex = validTexts.indexOf(originalText);
-    return translatedMap.get(validIndex) || originalText;
-  });
+  }
+
+  // 策略4: 部分匹配，使用已解析的结果填充
+  if (translatedMap.size > 0) {
+    return texts.map((originalText) => {
+      if (!originalText || originalText.trim().length === 0) {
+        return "";
+      }
+      const validIndex = validTexts.indexOf(originalText);
+      return translatedMap.get(validIndex) || originalText;
+    });
+  }
+
+  // 所有策略失败，返回原文
+  console.warn("所有解析策略失败，返回原文");
+  return texts;
 }
 
 /**
