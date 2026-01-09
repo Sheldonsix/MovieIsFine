@@ -5,8 +5,9 @@
  * 功能：
  * 1. 从数据库中随机选择 250 部电影
  * 2. 从豆瓣抓取最新数据
- * 3. 比较数据差异，仅更新有变化的字段
- * 4. 记录更新统计信息
+ * 3. 从 IMDb 抓取评分和家长指南（如果有 IMDb ID）
+ * 4. 比较数据差异，仅更新有变化的字段
+ * 5. 记录更新统计信息
  *
  * 使用方法:
  *   npx tsx scripts/update-movie-data.ts
@@ -26,7 +27,10 @@ config({ path: resolve(process.cwd(), ".env.local") });
 
 import { MongoClient, Db } from "mongodb";
 import { scrapeDoubanMovie, type DoubanMovieData } from "../src/services/doubanScraper";
+import { scrapeImdbRating, type IMDBRating } from "../src/services/imdbRatingScraper";
+import { scrapeImdbParentalGuide } from "../src/services/imdbParentalGuideScraper";
 import type { Movie } from "../src/types/movie";
+import type { ParentalGuide } from "../src/types/parentalGuide";
 
 // 数据库配置
 const MONGODB_URI = process.env.MONGODB_URI || "";
@@ -36,6 +40,8 @@ const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "movieisfine";
 const DEFAULT_LIMIT = 250; // 默认更新 250 部电影
 const REQUEST_DELAY = 3000; // 请求间隔（毫秒），避免触发反爬
 const RANDOM_DELAY_RANGE = 2000; // 随机延迟范围（毫秒）
+const IMDB_REQUEST_DELAY = 2000; // IMDb 请求间隔
+const UPDATE_IMDB_DATA = true; // 是否更新 IMDb 数据（评分和家长指南）
 
 interface UpdateStats {
   total: number;
@@ -171,6 +177,25 @@ function doubanDataToMovieUpdate(data: DoubanMovieData): Partial<Movie> {
 }
 
 /**
+ * 将 IMDb 评分数据转换为 Movie 更新数据
+ */
+function imdbRatingToMovieUpdate(data: IMDBRating): Partial<Movie> {
+  return {
+    imdbRating: data.rating ?? undefined,
+    imdbRatingCount: data.ratingCount ?? undefined,
+  };
+}
+
+/**
+ * 将 IMDb 家长指南数据转换为 Movie 更新数据
+ */
+function imdbParentalGuideToMovieUpdate(data: ParentalGuide): Partial<Movie> {
+  return {
+    parentalGuide: data,
+  };
+}
+
+/**
  * 比较两个值是否相等
  */
 function isEqual(a: unknown, b: unknown): boolean {
@@ -206,6 +231,9 @@ function detectChanges(
     "doubanRating",
     "ratingCount",
     "imdbId",
+    "imdbRating",
+    "imdbRatingCount",
+    "parentalGuide",
   ];
 
   for (const field of fieldsToCheck) {
@@ -273,10 +301,11 @@ async function processMovie(
   console.log(`  上次更新: ${lastUpdate}`);
 
   // 从豆瓣抓取最新数据
+  console.log(`  [1/3] 抓取豆瓣数据...`);
   const scrapeResult = await scrapeDoubanMovie(movie.doubanUrl);
 
   if (!scrapeResult.success || !scrapeResult.data) {
-    console.log(`  ✗ 抓取失败: ${scrapeResult.error}`);
+    console.log(`  ✗ 豆瓣抓取失败: ${scrapeResult.error}`);
     return {
       status: "failed",
       error: scrapeResult.error,
@@ -284,7 +313,43 @@ async function processMovie(
   }
 
   // 转换为 Movie 更新数据
-  const newData = doubanDataToMovieUpdate(scrapeResult.data);
+  let newData = doubanDataToMovieUpdate(scrapeResult.data);
+
+  // 如果有 IMDb ID，抓取 IMDb 数据
+  if (UPDATE_IMDB_DATA && scrapeResult.data.imdbId) {
+    const imdbId = scrapeResult.data.imdbId;
+    console.log(`  [2/3] 抓取 IMDb 评分 (${imdbId})...`);
+
+    // 延迟避免触发反爬
+    await delay(IMDB_REQUEST_DELAY, 1000);
+
+    // 抓取 IMDb 评分
+    const imdbRatingResult = await scrapeImdbRating(imdbId);
+    if (imdbRatingResult.success && imdbRatingResult.data) {
+      const imdbRatingData = imdbRatingToMovieUpdate(imdbRatingResult.data);
+      newData = { ...newData, ...imdbRatingData };
+      console.log(`    ✓ IMDb 评分: ${imdbRatingResult.data.rating ?? 'N/A'}/10`);
+    } else {
+      console.log(`    ⊘ IMDb 评分抓取失败: ${imdbRatingResult.error}`);
+    }
+
+    // 延迟避免触发反爬
+    await delay(IMDB_REQUEST_DELAY, 1000);
+
+    // 抓取 IMDb 家长指南
+    console.log(`  [3/3] 抓取 IMDb 家长指南...`);
+    const parentalGuideResult = await scrapeImdbParentalGuide(imdbId);
+    if (parentalGuideResult.success && parentalGuideResult.data) {
+      const parentalGuideData = imdbParentalGuideToMovieUpdate(parentalGuideResult.data);
+      newData = { ...newData, ...parentalGuideData };
+      console.log(`    ✓ 家长指南已抓取`);
+    } else {
+      console.log(`    ⊘ 家长指南抓取失败: ${parentalGuideResult.error}`);
+    }
+  } else {
+    console.log(`  [2/3] 跳过 IMDb 数据（无 IMDb ID）`);
+    console.log(`  [3/3] 跳过 IMDb 家长指南`);
+  }
 
   // 获取当前数据库中的数据
   const currentMovie = await db.collection("movies").findOne({ id: movie.id });
@@ -312,6 +377,9 @@ async function processMovie(
     doubanRating: currentMovie.doubanRating as number,
     ratingCount: currentMovie.ratingCount as number | undefined,
     imdbId: currentMovie.imdbId as string | undefined,
+    imdbRating: currentMovie.imdbRating as number | undefined,
+    imdbRatingCount: currentMovie.imdbRatingCount as number | undefined,
+    parentalGuide: currentMovie.parentalGuide as ParentalGuide | undefined,
   };
 
   // 检测变化
@@ -329,7 +397,13 @@ async function processMovie(
   if (dryRun) {
     console.log(`  [DRY RUN] 将更新以下字段:`);
     changes.forEach((field) => {
-      console.log(`    - ${field}: ${JSON.stringify(updates[field as keyof Movie])}`);
+      const value = updates[field as keyof Movie];
+      // 对于 parentalGuide 这种复杂对象，只显示摘要
+      if (field === "parentalGuide") {
+        console.log(`    - ${field}: [ParentalGuide object]`);
+      } else {
+        console.log(`    - ${field}: ${JSON.stringify(value)}`);
+      }
     });
   } else {
     const updated = await updateMovieData(db, movie.id, updates, dryRun);
