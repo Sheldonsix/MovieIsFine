@@ -6,7 +6,7 @@ import { Movie } from '@/types/movie';
 import MovieCard from './MovieCard';
 import { fetchMovies } from '@/app/actions';
 import type { SortConfig, SortField } from '@/services/movieService';
-import { Loader2, Star, Calendar, ArrowUp, ArrowDown, Type } from 'lucide-react';
+import { Star, Calendar, ArrowUp, ArrowDown, Type } from 'lucide-react';
 
 interface MovieInfiniteListProps {
   initialMovies: Movie[];
@@ -20,13 +20,13 @@ interface SortOption {
 }
 
 const SORT_OPTIONS: SortOption[] = [
-  { field: 'rating', label: '评分', icon: <Star className="w-4 h-4" /> },
-  { field: 'releaseDate', label: '首映日期', icon: <Calendar className="w-4 h-4" /> },
-  { field: 'title', label: '名称', icon: <Type className="w-4 h-4" /> },
+  { field: 'rating', label: '评分', icon: <Star className="w-4 h-4 stroke-[2px]" /> },
+  { field: 'releaseDate', label: '首映日期', icon: <Calendar className="w-4 h-4 stroke-[2px]" /> },
+  { field: 'title', label: '名称', icon: <Type className="w-4 h-4 stroke-[2px]" /> },
 ];
 
 /**
- * 将排序配置转换为 URL 参数字符串
+ * Convert sort config to URL parameter string
  */
 function sortConfigToString(config: SortConfig): string {
   return `${config.field}_${config.order}`;
@@ -44,7 +44,7 @@ export default function MovieInfiniteList({ initialMovies, initialSort }: MovieI
   const [isChangingSort, setIsChangingSort] = useState(false);
   const observerTarget = useRef<HTMLDivElement>(null);
 
-  // 当 initialMovies 或 initialSort 变化时重置状态
+  // Reset state when initialMovies or initialSort changes
   useEffect(() => {
     setMovies(initialMovies);
     setPage(2);
@@ -95,18 +95,18 @@ export default function MovieInfiniteList({ initialMovies, initialSort }: MovieI
     };
   }, [loadMoreMovies, hasMore, isChangingSort]);
 
-  // 处理排序按钮点击：同字段切换升降序，不同字段切换到该字段（默认降序）
+  // Handle sort button click: toggle order for same field, switch to field (default desc) for different field
   const handleSortClick = (field: SortField) => {
     let newConfig: SortConfig;
 
     if (sortConfig.field === field) {
-      // 同一字段：切换升降序
+      // Same field: toggle order
       newConfig = {
         field,
         order: sortConfig.order === 'desc' ? 'asc' : 'desc',
       };
     } else {
-      // 不同字段：切换到该字段，默认降序
+      // Different field: switch to that field, default descending
       newConfig = {
         field,
         order: 'desc',
@@ -116,14 +116,14 @@ export default function MovieInfiniteList({ initialMovies, initialSort }: MovieI
     updateSort(newConfig);
   };
 
-  // 更新 URL 并触发重新加载
+  // Update URL and trigger reload
   const updateSort = (newConfig: SortConfig) => {
     if (newConfig.field === sortConfig.field && newConfig.order === sortConfig.order) return;
 
     setIsChangingSort(true);
     const params = new URLSearchParams(searchParams.toString());
 
-    // 默认值（rating_desc）不需要在 URL 中显示
+    // Default value (rating_desc) doesn't need to be shown in URL
     if (newConfig.field === 'rating' && newConfig.order === 'desc') {
       params.delete('sort');
     } else {
@@ -136,9 +136,9 @@ export default function MovieInfiniteList({ initialMovies, initialSort }: MovieI
 
   return (
     <>
-      {/* 排序选择器 */}
-      <div className="flex items-center gap-2 mb-6 flex-wrap">
-        <span className="text-sm text-gray-500 dark:text-gray-400">排序：</span>
+      {/* Sort selector - 90s style */}
+      <div className="flex items-center gap-2 mb-6 flex-wrap panel-90s p-2">
+        <span className="text-sm font-bold text-[#808080]">排序：</span>
 
         <div className="flex gap-2">
           {SORT_OPTIONS.map((option) => {
@@ -150,13 +150,12 @@ export default function MovieInfiniteList({ initialMovies, initialSort }: MovieI
                 key={option.field}
                 onClick={() => handleSortClick(option.field)}
                 disabled={isChangingSort}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold
-                  transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
-                  ${
-                    isActive
-                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 scale-105'
-                      : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-700'
-                  }`}
+                className={`btn-90s flex items-center gap-1.5 px-3 py-1.5 text-sm
+                  ${isActive
+                    ? 'btn-90s-accent'
+                    : ''
+                  }
+                  disabled:opacity-50 disabled:cursor-not-allowed`}
                 title={
                   isActive
                     ? `当前${isDesc ? '降序' : '升序'}，点击切换${isDesc ? '升序' : '降序'}`
@@ -165,11 +164,11 @@ export default function MovieInfiniteList({ initialMovies, initialSort }: MovieI
               >
                 {option.icon}
                 <span>{option.label}</span>
-                {/* 当前选中字段显示升降序箭头 */}
+                {/* Show arrow for active field */}
                 {isActive && (
                   isDesc
-                    ? <ArrowDown className="w-4 h-4" />
-                    : <ArrowUp className="w-4 h-4" />
+                    ? <ArrowDown className="w-4 h-4 stroke-[2px]" />
+                    : <ArrowUp className="w-4 h-4 stroke-[2px]" />
                 )}
               </button>
             );
@@ -177,24 +176,29 @@ export default function MovieInfiniteList({ initialMovies, initialSort }: MovieI
         </div>
       </div>
 
-      {/* 电影网格 */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+      {/* Movie grid - table-like with visible borders */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
         {movies.map((movie) => (
-          <div key={movie.id} className="transform hover:-translate-y-1 transition-transform duration-300">
+          <div key={movie.id}>
             <MovieCard movie={movie} />
           </div>
         ))}
       </div>
 
-      <div ref={observerTarget} className="flex justify-center py-8 h-20">
+      {/* Loading indicator - 90s style */}
+      <div ref={observerTarget} className="flex justify-center py-8">
         {(loading || isChangingSort) && (
-          <div className="flex items-center gap-2 text-gray-500">
-            <Loader2 className="w-6 h-6 animate-spin" />
-            <span>{isChangingSort ? '切换排序中...' : '正在加载更多...'}</span>
+          <div className="panel-90s p-4 flex items-center gap-2">
+            <span className="animate-blink text-[#FF0000] font-bold">●</span>
+            <span className="font-bold">
+              {isChangingSort ? '切换排序中...' : '正在加载更多...'}
+            </span>
           </div>
         )}
         {!hasMore && movies.length > 0 && !isChangingSort && (
-          <p className="text-gray-500 text-sm">已经到底啦~</p>
+          <div className="panel-90s p-4 bg-[#FFFFCC]">
+            <p className="font-bold text-sm">═══ 已经到底啦~ ═══</p>
+          </div>
         )}
       </div>
     </>

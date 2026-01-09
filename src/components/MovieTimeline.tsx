@@ -4,7 +4,7 @@ import { useState } from "react";
 import { PlotPoint } from "@/types/movie";
 
 interface MovieTimelineProps {
-  duration: number; // 电影总时长（分钟）
+  duration: number; // Total movie duration (minutes)
   plotPoints: PlotPoint[];
 }
 
@@ -19,22 +19,23 @@ export default function MovieTimeline({
   };
 
   return (
-    <div className="w-full py-6">
-      <h2 className="text-xl font-bold mb-4 flex items-center text-gray-900 dark:text-white transition-colors duration-300">
-        <span className="w-1 h-6 bg-yellow-500 mr-3 rounded"></span>
+    <div className="w-full py-4">
+      {/* 90s style header */}
+      <h2 className="heading-90s text-lg mb-4 flex items-center">
+        <span className="inline-block w-4 h-4 bg-[#FFFF00] bevel-outset mr-2"></span>
         剧情时间轴
       </h2>
 
-      <div className="relative bg-white/50 dark:bg-gray-800/50 rounded-lg p-6 transition-colors duration-300">
-        {/* 时间标签 */}
-        <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-2 transition-colors duration-300">
+      <div className="panel-90s p-4">
+        {/* Time labels */}
+        <div className="flex justify-between text-sm font-bold mb-2 mono-90s">
           <span>0</span>
           <span>{duration}分钟</span>
         </div>
 
-        {/* 进度条背景 */}
-        <div className="relative h-2 bg-gray-300 dark:bg-gray-700 rounded-full mb-12 mx-2 transition-colors duration-300">
-          {/* 节点 */}
+        {/* Progress bar - 90s inset style */}
+        <div className="relative h-4 bevel-inset bg-[#808080] mb-16 mx-2">
+          {/* Nodes */}
           {plotPoints.map((point) => {
             const position = (point.timestamp / duration) * 100;
             const isSelected = selectedPoint === point.id;
@@ -50,66 +51,50 @@ export default function MovieTimeline({
                   transform: "translate(-50%, -50%)"
                 }}
               >
-                {/* 节点圆点 */}
+                {/* Node button - 90s beveled style */}
                 <button
                   onClick={() => handleNodeClick(point.id)}
-                  className={`w-4 h-4 rounded-full border-2 transition-all duration-200 hover:scale-150 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-sm ${
+                  className={`w-5 h-5 bevel-outset focus-90s ${
                     isSelected
-                      ? "bg-yellow-500 border-yellow-500 scale-150"
-                      : "bg-gray-200 border-gray-200 dark:bg-white dark:border-white hover:bg-yellow-400 hover:border-yellow-400"
+                      ? "bg-[#FFFF00]"
+                      : "bg-[#00FF00] hover:bg-[#FFFF00]"
                   }`}
                   aria-label={`${point.title} - ${point.timestamp}分钟`}
                 />
 
-                {/* 时间标签 */}
+                {/* Time label */}
                 <div
-                  className={`absolute top-7 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap transition-colors duration-200 ${
-                    isSelected ? "text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"
+                  className={`absolute top-8 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap mono-90s font-bold ${
+                    isSelected ? "text-[#FF0000]" : "text-[#000080]"
                   }`}
                 >
                   {point.timestamp}′
                 </div>
 
-                {/* 剧情卡片 */}
+                {/* Plot card - Windows 95 window style */}
                 {isSelected && (
                   <div
-                    className="absolute top-14 left-1/2 -ml-32 z-10 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl p-4 animate-fadeIn transition-colors duration-300"
+                    className="absolute top-14 left-1/2 -ml-32 z-10 w-64 window-90s"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {/* 三角箭头 (Border) */}
-                    <div className="absolute -top-[9px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-l-transparent border-r-transparent border-b-gray-200 dark:border-b-gray-700 transition-colors duration-300"></div>
-                    {/* 三角箭头 (Background) */}
-                    <div className="absolute -top-[7px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-l-transparent border-r-transparent border-b-white dark:border-b-gray-800 transition-colors duration-300"></div>
+                    {/* Title bar */}
+                    <div className="win95-titlebar text-xs flex items-center justify-between">
+                      <span>📋 {point.title}</span>
+                      <button
+                        onClick={() => setSelectedPoint(null)}
+                        className="btn-90s px-1.5 py-0 text-xs"
+                        aria-label="关闭"
+                      >
+                        ×
+                      </button>
+                    </div>
 
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-bold text-yellow-500 text-sm">
-                          {point.title}
-                        </h3>
-                        <button
-                          onClick={() => setSelectedPoint(null)}
-                          className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-                          aria-label="关闭"
-                        >
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {point.timestamp} 分钟
+                    {/* Content */}
+                    <div className="panel-90s-content p-3 space-y-2">
+                      <p className="text-xs text-[#808080] mono-90s">
+                        ⏱️ {point.timestamp} 分钟
                       </p>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed transition-colors duration-300">
+                      <p className="text-sm leading-relaxed">
                         {point.description}
                       </p>
                     </div>
@@ -120,27 +105,11 @@ export default function MovieTimeline({
           })}
         </div>
 
-        {/* 提示文本 */}
-        <p className="text-center text-sm text-gray-500 mt-4">
-          点击时间轴上的节点查看剧情详情
+        {/* Help text */}
+        <p className="text-center text-sm font-bold text-[#808080] mt-4">
+          ► 点击时间轴上的节点查看剧情详情 ◄
         </p>
       </div>
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-4px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.2s ease-out;
-        }
-      `}</style>
     </div>
   );
 }

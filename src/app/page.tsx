@@ -12,7 +12,7 @@ interface HomeProps {
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams;
 
-  // 解析排序参数，默认按评分降序排序
+  // Parse sort parameter, default to rating descending
   const sortConfig: SortConfig = params.sort
     ? parseSortString(params.sort)
     : { field: "rating", order: "desc" };
@@ -22,57 +22,101 @@ export default async function Home({ searchParams }: HomeProps) {
   const movieCount = await fetchMovieCount();
 
   return (
-    <div className="space-y-6 sm:space-y-8 md:space-y-12 animate-in fade-in duration-500">
-      {/* Hero Section */}
-      <section className="relative z-10 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white shadow-2xl dark:shadow-purple-900/20 mx-0">
-        <div className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
-          {/* 背景装饰元素 - 移动端缩小尺寸 */}
-          <div className="absolute top-[-50%] left-[-20%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] md:w-[800px] md:h-[800px] rounded-full bg-white/10 blur-3xl"></div>
-          <div className="absolute bottom-[-20%] right-[-10%] w-[200px] h-[200px] sm:w-[400px] sm:h-[400px] md:w-[600px] md:h-[600px] rounded-full bg-indigo-900/20 blur-3xl"></div>
+    <div className="space-y-4">
+      {/* Hero Section - Windows 95 Window Style */}
+      <section className="window-90s">
+        {/* Title bar */}
+        <div className="win95-titlebar flex items-center justify-between">
+          <span className="text-sm sm:text-base">🎬 MovieIsFine - Welcome!</span>
+          <div className="flex gap-1">
+            <button className="btn-90s px-2 py-0 text-xs">_</button>
+            <button className="btn-90s px-2 py-0 text-xs">□</button>
+            <button className="btn-90s btn-90s-danger px-2 py-0 text-xs">×</button>
+          </div>
         </div>
 
-        <div className="relative z-10 px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-24 lg:py-32 text-center space-y-4 sm:space-y-6 md:space-y-8">
-          <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-black tracking-tighter drop-shadow-lg">
-            Movie is All you need.
-          </h1>
-          <p className="text-sm sm:text-base md:text-lg lg:text-2xl text-white/90 max-w-2xl mx-auto font-medium leading-relaxed px-2">
-            No more awkward movie nights.
-          </p>
-          {/* 搜索框 */}
-          <div className="pt-2 sm:pt-4 px-2 sm:px-0">
-            <MovieSearch />
+        {/* Window content */}
+        <div className="panel-90s-content p-4 sm:p-6 md:p-8">
+          <div className="text-center space-y-4">
+            {/* Rainbow animated title */}
+            <h1 className="heading-90s text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-rainbow">
+              Movie is All you need.
+            </h1>
+
+            <p className="text-base sm:text-lg md:text-xl font-bold">
+              No more awkward movie nights.
+            </p>
+
+            {/* NEW! Badge */}
+            <div className="inline-block">
+              <span className="inline-block bg-[#FF0000] text-white font-bold px-3 py-1 text-sm animate-pulse-glow bevel-outset">
+                🔥 NEW! 🔥
+              </span>
+            </div>
+
+            {/* Search box */}
+            <div className="pt-4 max-w-xl mx-auto">
+              <MovieSearch />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Movie Grid Section */}
-      <section className="px-1 sm:px-0">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6 sm:mb-8 px-2">
-          <div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
-              热门精选
-            </h2>
-            <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">
-              收录了 {movieCount} 部影史经典
-            </p>
+      {/* Groove divider */}
+      <div className="hr-groove my-6"></div>
+
+      {/* Movie Grid Section - Windows 95 Window Style */}
+      <section className="window-90s">
+        {/* Title bar */}
+        <div className="win95-titlebar flex items-center justify-between flex-wrap gap-2">
+          <span className="text-sm sm:text-base">📁 Movie Database</span>
+          <div className="hit-counter text-xs py-1 px-2">
+            Total: <span className="font-bold">{String(movieCount).padStart(6, '0')}</span> movies
           </div>
-          {/* 添加电影按钮 */}
-          <Link
-            href="/add"
-            className="flex items-center justify-center sm:justify-start gap-2 px-4 py-2.5 sm:py-2 rounded-xl
-              bg-gradient-to-r from-teal-500 to-emerald-500
-              hover:from-teal-600 hover:to-emerald-600
-              text-white font-medium shadow-lg shadow-teal-500/25
-              hover:shadow-teal-500/40 transition-all duration-300
-              w-full sm:w-auto"
-          >
-            <Plus className="w-5 h-5" />
-            <span>添加电影</span>
-          </Link>
         </div>
 
-        <MovieInfiniteList initialMovies={initialMovies} initialSort={sortConfig} />
+        {/* Window content */}
+        <div className="panel-90s-content p-4">
+          {/* Section header */}
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6 border-b-4 border-[#808080] pb-4">
+            <div>
+              <h2 className="heading-90s text-xl sm:text-2xl md:text-3xl">
+                热门精选
+              </h2>
+              <p className="text-sm mt-1 text-[#808080] mono-90s">
+                收录了 {movieCount} 部影史经典
+              </p>
+            </div>
+
+            {/* Add movie button - 90s style */}
+            <Link
+              href="/add"
+              className="btn-90s btn-90s-success flex items-center justify-center gap-2 no-underline"
+            >
+              <Plus className="w-5 h-5 stroke-[2px]" />
+              <span>添加电影</span>
+            </Link>
+          </div>
+
+          <MovieInfiniteList initialMovies={initialMovies} initialSort={sortConfig} />
+        </div>
+      </section>
+
+      {/* Decorative colored squares section */}
+      <section className="panel-90s p-4">
+        <div className="text-center">
+          <p className="font-bold mb-3">🌈 Color Test Pattern 🌈</p>
+          <div className="flex justify-center gap-2 flex-wrap">
+            <div className="color-square bg-[#FF0000]"></div>
+            <div className="color-square bg-[#FF8000]"></div>
+            <div className="color-square bg-[#FFFF00]"></div>
+            <div className="color-square bg-[#00FF00]"></div>
+            <div className="color-square bg-[#00FFFF]"></div>
+            <div className="color-square bg-[#0000FF]"></div>
+            <div className="color-square bg-[#8000FF]"></div>
+            <div className="color-square bg-[#FF00FF]"></div>
+          </div>
+        </div>
       </section>
     </div>
   );

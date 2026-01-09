@@ -1,26 +1,414 @@
 @import "tailwindcss";
 
-@variant dark (&:where(.dark, .dark *));
+/* ============================================
+   90s RETRO / NOSTALGIA DESIGN SYSTEM
+   ============================================ */
 
+/* Light mode only - 90s didn't have dark mode! */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core Windows 95 palette */
+  --background: #C0C0C0;
+  --foreground: #000000;
+  --muted: #808080;
+  --accent: #0000FF;
+  --secondary: #FF0000;
+  --tertiary: #FFFF00;
+  --success: #00FF00;
+  --success-dark: #00AA00;
+
+  /* Border colors for 3D bevel effect */
+  --border: #000000;
+  --border-light: #FFFFFF;
+  --border-dark: #808080;
+  --border-darker: #404040;
+  --border-lighter: #DFDFDF;
+
+  /* Special colors */
+  --title-bar: #000080;
+  --title-bar-end: #1084D0;
+  --panel-yellow: #FFFFCC;
+  --visited-link: #800080;
+  --hover-link: #FF0000;
+
+  /* Row alternating */
+  --row-even: #FFFFFF;
+  --row-odd: #E8E8E8;
 }
 
+/* Disable dark mode - 90s style only */
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #C0C0C0;
+  --foreground: #000000;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Use 90s system fonts */
+  --font-sans: "MS Sans Serif", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
 }
 
+/* ============================================
+   BASE STYLES
+   ============================================ */
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "MS Sans Serif", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  /* 90s tiled pattern background */
+  background-image:
+    linear-gradient(45deg, #b8b8b8 25%, transparent 25%),
+    linear-gradient(-45deg, #b8b8b8 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #b8b8b8 75%),
+    linear-gradient(-45deg, transparent 75%, #b8b8b8 75%);
+  background-size: 4px 4px;
+  background-position: 0 0, 0 2px, 2px -2px, -2px 0px;
+}
+
+/* All links: 90s classic blue, underlined, turn red on hover */
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  transition: none;
+}
+
+a:visited {
+  color: var(--visited-link);
+}
+
+a:hover {
+  color: var(--hover-link);
+}
+
+/* ============================================
+   3D BEVEL EFFECTS (THE SIGNATURE)
+   ============================================ */
+
+/* Outset (raised) - Elements that pop out */
+.bevel-outset {
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #dfdfdf;
+}
+
+/* Enhanced outset (deeper bevel) */
+.bevel-outset-deep {
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow:
+    inset -2px -2px 0 #808080,
+    inset 2px 2px 0 #fff,
+    inset -4px -4px 0 #404040,
+    inset 4px 4px 0 #dfdfdf;
+}
+
+/* Inset (sunken) - Elements that are pressed in */
+.bevel-inset {
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #dfdfdf;
+}
+
+/* Active/pressed state for buttons */
+.bevel-pressed {
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #dfdfdf;
+  transform: translate(1px, 1px);
+}
+
+/* ============================================
+   WINDOWS 95 TITLE BAR
+   ============================================ */
+.win95-titlebar {
+  background: linear-gradient(to right, #000080, #1084d0);
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+}
+
+/* ============================================
+   TEXTURES & PATTERNS
+   ============================================ */
+
+/* Construction warning stripes */
+.bg-construction {
+  background: repeating-linear-gradient(
+    45deg,
+    #ffff00,
+    #ffff00 10px,
+    #000000 10px,
+    #000000 20px
+  );
+}
+
+/* 90s tiled pattern */
+.bg-90s-tile {
+  background-color: #c0c0c0;
+  background-image:
+    linear-gradient(45deg, #b8b8b8 25%, transparent 25%),
+    linear-gradient(-45deg, #b8b8b8 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #b8b8b8 75%),
+    linear-gradient(-45deg, transparent 75%, #b8b8b8 75%);
+  background-size: 4px 4px;
+  background-position: 0 0, 0 2px, 2px -2px, -2px 0px;
+}
+
+/* ============================================
+   HORIZONTAL RULE (GROOVE EFFECT)
+   ============================================ */
+.hr-groove {
+  border: none;
+  height: 4px;
+  background: linear-gradient(
+    to bottom,
+    #808080 0%, #808080 50%,
+    #ffffff 50%, #ffffff 100%
+  );
+}
+
+/* ============================================
+   ANIMATIONS (90s STYLE)
+   ============================================ */
+
+/* Rainbow text cycling animation */
+@keyframes rainbow {
+  0% { color: #ff0000; }
+  17% { color: #ff8000; }
+  33% { color: #ffff00; }
+  50% { color: #00ff00; }
+  67% { color: #0080ff; }
+  83% { color: #8000ff; }
+  100% { color: #ff0000; }
+}
+
+.text-rainbow {
+  animation: rainbow 4s linear infinite;
+}
+
+/* Pulse glow for "NEW!" badges */
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px 2px rgba(255, 0, 0, 0.5);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+/* Classic blink effect (harsh on/off) */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* ============================================
+   90s BUTTON STYLES
+   ============================================ */
+.btn-90s {
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #dfdfdf;
+  background-color: #c0c0c0;
+  color: #000000;
+  padding: 8px 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0;
+  cursor: pointer;
+  transition: none;
+}
+
+.btn-90s:hover {
+  background-color: #d0d0d0;
+}
+
+.btn-90s:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #dfdfdf;
+  transform: translate(1px, 1px);
+}
+
+.btn-90s:focus-visible {
+  outline: 2px dotted #000000;
+  outline-offset: 2px;
+}
+
+/* Blue accent button */
+.btn-90s-accent {
+  background-color: #0000FF;
+  color: #FFFFFF;
+  border-color: #5555ff #000080 #000080 #5555ff;
+}
+
+.btn-90s-accent:hover {
+  background-color: #3333ff;
+}
+
+/* Red danger button */
+.btn-90s-danger {
+  background-color: #FF0000;
+  color: #FFFFFF;
+  border-color: #ff5555 #800000 #800000 #ff5555;
+}
+
+.btn-90s-danger:hover {
+  background-color: #ff3333;
+}
+
+/* Green success button */
+.btn-90s-success {
+  background-color: #00AA00;
+  color: #FFFFFF;
+  border-color: #00ff00 #006600 #006600 #00ff00;
+}
+
+.btn-90s-success:hover {
+  background-color: #00cc00;
+}
+
+/* ============================================
+   90s INPUT STYLES
+   ============================================ */
+.input-90s {
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #dfdfdf;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 4px 8px;
+  border-radius: 0;
+}
+
+.input-90s::placeholder {
+  color: #808080;
+}
+
+.input-90s:focus {
+  outline: 2px dotted #000000;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   90s CARD/PANEL STYLES
+   ============================================ */
+.panel-90s {
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #dfdfdf;
+  background-color: #c0c0c0;
+}
+
+.panel-90s-content {
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #dfdfdf;
+  background-color: #ffffff;
+}
+
+/* Window-style panel */
+.window-90s {
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #dfdfdf;
+  background-color: #c0c0c0;
+}
+
+/* ============================================
+   HIT COUNTER STYLE
+   ============================================ */
+.hit-counter {
+  background-color: #000080;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #dfdfdf;
+  color: #00FF00;
+  font-family: "Courier New", Courier, monospace;
+  padding: 8px 16px;
+}
+
+/* ============================================
+   ACCESSIBILITY: REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .text-rainbow {
+    animation: none;
+    color: #ff0000;
+  }
+
+  .animate-pulse-glow {
+    animation: none;
+  }
+
+  .animate-blink {
+    animation: none;
+  }
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+/* 90s Headings - Bold/Black weights only */
+.heading-90s {
+  font-family: "Arial Black", Impact, Haettenschweiler, sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  /* Hard-edged text shadow for 3D effect */
+  text-shadow: 2px 2px 0 #808080;
+}
+
+/* Monospace for stats/counters */
+.mono-90s {
+  font-family: "Courier New", Courier, monospace;
+}
+
+/* ============================================
+   SELECTION STYLE
+   ============================================ */
+::selection {
+  background-color: #000080;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #000080;
+  color: #ffffff;
+}
+
+/* ============================================
+   COLORED SQUARES DECORATIONS
+   ============================================ */
+.color-square {
+  width: 24px;
+  height: 24px;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #dfdfdf;
+}
+
+/* ============================================
+   FOCUS STATES (Windows 95 style)
+   ============================================ */
+.focus-90s:focus-visible {
+  outline: 2px dotted #000000;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   NO BORDER RADIUS - ANYWHERE!
+   ============================================ */
+* {
+  border-radius: 0 !important;
 }

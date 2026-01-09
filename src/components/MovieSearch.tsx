@@ -19,11 +19,11 @@ export function MovieSearch() {
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const router = useRouter();
 
-  // 处理搜索输入变化
+  // Handle search input change
   const handleQueryChange = useCallback((value: string) => {
     setQuery(value);
 
-    // 清除之前的定时器
+    // Clear previous timer
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
@@ -34,7 +34,7 @@ export function MovieSearch() {
       return;
     }
 
-    // 防抖搜索
+    // Debounced search
     debounceTimerRef.current = setTimeout(() => {
       startTransition(async () => {
         const searchResults = await searchMovies(value);
@@ -45,7 +45,7 @@ export function MovieSearch() {
     }, 300);
   }, []);
 
-  // 清理定时器
+  // Cleanup timer
   useEffect(() => {
     return () => {
       if (debounceTimerRef.current) {
@@ -54,7 +54,7 @@ export function MovieSearch() {
     };
   }, []);
 
-  // 点击外部关闭下拉框
+  // Click outside to close dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -69,7 +69,7 @@ export function MovieSearch() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 跳转到电影详情页
+  // Navigate to movie detail page
   const navigateToMovie = useCallback(
     (doubanId: string) => {
       setIsOpen(false);
@@ -79,7 +79,7 @@ export function MovieSearch() {
     [router]
   );
 
-  // 键盘导航
+  // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isOpen || results.length === 0) return;
 
@@ -107,7 +107,7 @@ export function MovieSearch() {
     }
   };
 
-  // 清空搜索
+  // Clear search
   const clearSearch = () => {
     setQuery("");
     setResults([]);
@@ -117,117 +117,119 @@ export function MovieSearch() {
 
   return (
     <div ref={containerRef} className="relative w-full max-w-xl mx-auto">
-      {/* 搜索输入框 */}
-      <div className="relative z-50 group">
-        <Search
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-500 transition-colors duration-300 z-10 pointer-events-none"
-          size={20}
-        />
-        <input
-          ref={inputRef}
-          type="text"
-          value={query}
-          onChange={(e) => handleQueryChange(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onFocus={() => query.trim().length > 0 && setIsOpen(true)}
-          placeholder="探索你的下一部电影..."
-          className="w-full pl-12 pr-10 py-3 rounded-xl border border-gray-200 dark:border-gray-700
-            bg-white/90 dark:bg-gray-900/90 backdrop-blur-md
-            text-gray-900 dark:text-white
-            placeholder-gray-400 dark:placeholder-gray-500
-            shadow-xl hover:shadow-2xl focus:shadow-indigo-500/20
-            focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50
-            transition-all duration-300 ease-out"
-        />
-        {query && (
-          <div className={`absolute right-3 top-1/2 -translate-y-1/2 transition-all duration-200 ${query ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'}`}>
-          <button
-            onClick={clearSearch}
-            className="p-1.5 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-500 dark:hover:text-gray-300 dark:hover:bg-gray-700 transition-colors"
-            aria-label="清空搜索"
-          >
-            <X size={16} />
-          </button>
+      {/* Search input - 90s style */}
+      <div className="relative z-50">
+        <div className="bevel-inset bg-white flex items-center">
+          <Search
+            className="ml-2 text-[#808080] shrink-0"
+            size={20}
+            strokeWidth={2}
+          />
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => handleQueryChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onFocus={() => query.trim().length > 0 && setIsOpen(true)}
+            placeholder="探索你的下一部电影..."
+            className="input-90s flex-1 border-0 shadow-none focus:outline-none"
+          />
+          {query && (
+            <button
+              onClick={clearSearch}
+              className="btn-90s px-2 py-1 mr-1"
+              aria-label="清空搜索"
+            >
+              <X size={14} strokeWidth={2} />
+            </button>
+          )}
         </div>
-        )}
       </div>
 
-      {/* 搜索结果下拉框 */}
+      {/* Search results dropdown - 90s window style */}
       {isOpen && (
-        <div
-          className="absolute top-full left-0 right-0 mt-2 z-50
-        rounded-2xl border border-gray-200 dark:border-gray-700
-        bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl
-        shadow-2xl shadow-indigo-500/10 dark:shadow-black/50
-        overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 origin-top"
-        >
-          {isPending ? (
-            <div className="p-2 space-y-2">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-3 p-2 rounded-xl animate-pulse">
-                <div className="w-10 h-14 bg-gray-200 dark:bg-gray-700 rounded" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
-                </div>
+        <div className="absolute top-full left-0 right-0 mt-1 z-50 window-90s">
+          <div className="win95-titlebar text-xs">
+            🔍 搜索结果
+          </div>
+          <div className="panel-90s-content max-h-80 overflow-y-auto">
+            {isPending ? (
+              <div className="p-2 space-y-2">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-center gap-3 p-2 bg-[#E8E8E8]">
+                    <div className="w-10 h-14 bg-[#808080]" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 bg-[#808080] w-3/4" />
+                      <div className="h-3 bg-[#808080] w-1/2" />
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          ) : results.length > 0 ? (
-            <ul className="max-h-80 overflow-y-auto">
-              {results.map((movie, index) => (
-                <li key={movie.doubanId}>
-                  <button
-                    onClick={() => navigateToMovie(movie.doubanId)}
-                    onMouseEnter={() => setSelectedIndex(index)}
-                    className={`group w-full flex items-center gap-4 p-2 rounded-xl text-left transition-all duration-200
-                      ${index === selectedIndex
-                        ? "bg-indigo-50 dark:bg-indigo-500/10 scale-[0.99]"
-                        : "hover:bg-gray-50 dark:hover:bg-white/5"
-                      }`}
-                  >
-                    {/* 电影海报缩略图 */}
-                    <div className="relative w-12 h-16 flex-shrink-0 rounded-lg overflow-hidden shadow-sm group-hover:shadow-md transition-shadow bg-gray-200 dark:bg-gray-700">
-                      <Image
-                        src={movie.poster}
-                        alt={movie.title}
-                        fill
-                        className="object-cover"
-                        sizes="40px"
-                      />
-                    </div>
-                    {/* 电影信息 */}
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-gray-900 dark:text-white truncate">
-                        {movie.title}
+            ) : results.length > 0 ? (
+              <ul>
+                {results.map((movie, index) => (
+                  <li key={movie.doubanId}>
+                    <button
+                      onClick={() => navigateToMovie(movie.doubanId)}
+                      onMouseEnter={() => setSelectedIndex(index)}
+                      className={`w-full flex items-center gap-3 p-2 text-left border-b-2 border-[#808080] last:border-b-0
+                        ${index === selectedIndex
+                          ? "bg-[#000080] text-white"
+                          : index % 2 === 0
+                            ? "bg-[#FFFFFF]"
+                            : "bg-[#E8E8E8]"
+                        }`}
+                    >
+                      {/* Movie poster thumbnail */}
+                      <div className="bevel-inset p-0.5 shrink-0">
+                        <div className="relative w-10 h-14">
+                          <Image
+                            src={movie.poster}
+                            alt={movie.title}
+                            fill
+                            className="object-cover"
+                            sizes="40px"
+                          />
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-2">
-                        <span className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                          {movie.releaseDate.slice(0, 4)}
-                        </span>
-                        <span className="truncate max-w-[120px]">{movie.director}</span>
+                      {/* Movie info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-sm truncate">
+                          {movie.title}
+                        </div>
+                        <div className={`text-xs mt-0.5 flex items-center gap-2 ${
+                          index === selectedIndex ? "text-white/80" : "text-[#808080]"
+                        }`}>
+                          <span className="mono-90s">
+                            {movie.releaseDate.slice(0, 4)}
+                          </span>
+                          <span className="truncate max-w-[120px]">{movie.director}</span>
+                        </div>
                       </div>
-                    </div>
-                    {/* 评分 */}
-                    {movie.doubanRating > 0 && (
-                    <div className="flex-shrink-0 flex flex-col items-end gap-1">
-                        <span className="text-sm font-bold text-amber-500">
-                          {movie.doubanRating}
-                        </span>
-                        <span className="text-[10px] text-gray-400">豆瓣</span>
-                    </div>
-                    )}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="py-12 flex flex-col items-center text-center text-gray-500 dark:text-gray-400">
-
-            <p className="text-sm">未找到与 {query} 相关的电影</p>
-            <p className="text-xs text-gray-400 mt-1">换个关键词试试？</p>
+                      {/* Rating */}
+                      {movie.doubanRating > 0 && (
+                        <div className={`shrink-0 bevel-outset px-2 py-1 ${
+                          index === selectedIndex ? "bg-[#FFFF00]" : "bg-[#00AA00]"
+                        }`}>
+                          <span className={`mono-90s text-sm font-bold ${
+                            index === selectedIndex ? "text-black" : "text-white"
+                          }`}>
+                            {movie.doubanRating}
+                          </span>
+                        </div>
+                      )}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="py-8 text-center bg-[#FFFFCC]">
+                <p className="text-sm font-bold">未找到与 &quot;{query}&quot; 相关的电影</p>
+                <p className="text-xs text-[#808080] mt-1">换个关键词试试？</p>
+              </div>
+            )}
           </div>
-          )}
         </div>
       )}
     </div>
