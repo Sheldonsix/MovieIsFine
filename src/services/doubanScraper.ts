@@ -272,14 +272,38 @@ export async function scrapeDoubanMovie(
     }
 
     // 提取上映日期
-    const releaseDateElement = $('span[property="v:initialReleaseDate"]')
-      .first()
-      .text();
+    // 豆瓣可能有多个上映日期，格式如：2026(中国大陆) / 1980-05-23(美国点映) / 1980-06-13(美国)
+    // 我们需要最早的原始上映日期（通常是最后一个）
+    const releaseDateElements = $('span[property="v:initialReleaseDate"]')
+      .map((_, el) => $(el).text().trim())
+      .get();
     let releaseDate = "";
-    if (releaseDateElement) {
-      // 提取日期部分，去掉地区信息
-      const dateMatch = releaseDateElement.match(/(\d{4}-\d{2}-\d{2})/);
-      releaseDate = dateMatch ? dateMatch[1] : releaseDateElement.split("(")[0];
+    if (releaseDateElements.length > 0) {
+      // 解析所有日期，找出最早的
+      const parsedDates: Array<{ date: Date; original: string }> = [];
+      for (const dateStr of releaseDateElements) {
+        // 提取日期部分（YYYY-MM-DD 或 YYYY）
+        const fullDateMatch = dateStr.match(/(\d{4}-\d{2}-\d{2})/);
+        const yearOnlyMatch = dateStr.match(/^(\d{4})/);
+
+        if (fullDateMatch) {
+          parsedDates.push({
+            date: new Date(fullDateMatch[1]),
+            original: fullDateMatch[1],
+          });
+        } else if (yearOnlyMatch) {
+          parsedDates.push({
+            date: new Date(`${yearOnlyMatch[1]}-01-01`),
+            original: yearOnlyMatch[1],
+          });
+        }
+      }
+
+      if (parsedDates.length > 0) {
+        // 按日期升序排序，取最早的
+        parsedDates.sort((a, b) => a.date.getTime() - b.date.getTime());
+        releaseDate = parsedDates[0].original;
+      }
     } else if (year) {
       releaseDate = year;
     }
