@@ -100,8 +100,9 @@
      * 在电影信息区域插入分级信息
      * 样式与豆瓣电影页面的"电影信息"保持一致
      * @param {string} contentRatingZh 分级信息（中文）
+     * @param {string} doubanId 豆瓣 ID（用于构建详情页链接）
      */
-    function insertContentRating(contentRatingZh) {
+    function insertContentRating(contentRatingZh, doubanId) {
         if (!contentRatingZh) {
             return;
         }
@@ -123,8 +124,30 @@
         ratingLabel.className = 'pl movieisfine-rating';
         ratingLabel.textContent = '分级:';
 
-        // 分级内容使用空格分隔
-        const ratingValue = document.createTextNode(' ' + contentRatingZh);
+        // 分级内容：创建可点击链接跳转到详情页
+        let ratingValue;
+        if (doubanId) {
+            const apiBaseUrl = getApiBaseUrl();
+            const detailUrl = `${apiBaseUrl}/movie/${doubanId}`;
+
+            ratingValue = document.createElement('a');
+            ratingValue.href = detailUrl;
+            ratingValue.target = '_blank';
+            ratingValue.rel = 'noopener noreferrer';
+            ratingValue.textContent = ' ' + contentRatingZh;
+            ratingValue.title = '点击查看详细分级信息';
+            ratingValue.style.cssText = 'color: #37a; text-decoration: none; background: transparent;';
+            ratingValue.addEventListener('mouseenter', function() {
+                this.style.background = '#37a';
+                this.style.color = '#fff';
+            });
+            ratingValue.addEventListener('mouseleave', function() {
+                this.style.background = 'transparent';
+                this.style.color = '#37a';
+            });
+        } else {
+            ratingValue = document.createTextNode(' ' + contentRatingZh);
+        }
 
         // 换行符
         const br = document.createElement('br');
@@ -196,7 +219,7 @@
         try {
             const data = await fetchContentRating(doubanId);
             if (data && data.contentRatingZh) {
-                insertContentRating(data.contentRatingZh);
+                insertContentRating(data.contentRatingZh, data.doubanId);
             }
         } catch (error) {
             // 静默处理错误，仅在控制台输出
