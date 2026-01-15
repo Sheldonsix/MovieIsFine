@@ -92,6 +92,31 @@
         });
     }
 
+    /**
+     * 从分级详情中提取优先级最高的分级
+     * @param {Array} certifications 分级数据
+     * @returns {string|null} 分级字符串
+     */
+    function extractPriorityRating(certifications) {
+        if (!certifications || !Array.isArray(certifications) || certifications.length === 0) {
+            return null;
+        }
+
+        const priorityCountries = ['United States', 'Canada', 'Germany', 'Taiwan', 'Hong Kong'];
+
+        for (const country of priorityCountries) {
+            const cert = certifications.find(c => c.country === country);
+            if (cert && cert.ratings && cert.ratings.length > 0) {
+                // 优先寻找 note 以 "certificate" 开头的项
+                const certNoteRating = cert.ratings.find(r => r.note && r.note.toLowerCase().startsWith('certificate'));
+                const selectedRating = certNoteRating || cert.ratings[0];
+                return selectedRating.rating;
+            }
+        }
+
+        return null;
+    }
+
     // ============================================================
     // DOM 操作
     // ============================================================
@@ -218,8 +243,14 @@
 
         try {
             const data = await fetchContentRating(doubanId);
-            if (data && data.contentRatingZh) {
-                insertContentRating(data.contentRatingZh, data.doubanId);
+            if (data) {
+                const priorityRating = extractPriorityRating(data.certifications);
+                // 优先使用特定逻辑提取的分级，如果没有则回退到 contentRatingZh
+                const displayRating = priorityRating || data.contentRatingZh;
+
+                if (displayRating) {
+                    insertContentRating(displayRating, data.doubanId);
+                }
             }
         } catch (error) {
             // 静默处理错误，仅在控制台输出

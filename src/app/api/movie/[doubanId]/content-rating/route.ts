@@ -28,9 +28,11 @@ export async function GET(
   }
 
   const contentRatingZh = movie.parentalGuide?.content_rating_zh || null;
+  const certifications = movie.parentalGuide?.certifications || [];
 
   return NextResponse.json({
     doubanId,
     contentRatingZh,
+    certifications,
   });
 }
